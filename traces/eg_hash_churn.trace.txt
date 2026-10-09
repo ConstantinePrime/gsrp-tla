@@ -1,0 +1,81 @@
+Error: Invariant OneFacade is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ epoch = 0
+/\ sess = "open"
+/\ segs = 0
+/\ S = <<0, 0, 0, 0>>
+/\ inserts = 0
+/\ resp = {}
+/\ view = <<0, 0, 0, 0>>
+/\ tomb = <<FALSE, FALSE, FALSE, FALSE>>
+/\ uage = <<0, 0, 0, 0>>
+/\ tg = 0
+/\ usrc = {}
+/\ sent = {}
+/\ lost = FALSE
+/\ uport = <<0, 0, 0, 0>>
+/\ answered = 0
+/\ senders = {}
+/\ live = {1, 2, 3}
+/\ mem = <<{1, 2, 3}, {1, 2, 3}, {1, 2, 3}, {}>>
+
+State 2: <SendSeg line 99, col 5 to line 111, col 70 of module GsrpEgress>
+/\ epoch = 0
+/\ sess = "open"
+/\ segs = 1
+/\ S = <<0, 0, 1, 0>>
+/\ inserts = 1
+/\ resp = {}
+/\ view = <<3, 0, 0, 0>>
+/\ tomb = <<FALSE, FALSE, FALSE, FALSE>>
+/\ uage = <<0, 0, 0, 0>>
+/\ tg = 0
+/\ usrc = {}
+/\ sent = {<<3, 1>>}
+/\ lost = FALSE
+/\ uport = <<0, 0, 0, 0>>
+/\ answered = 0
+/\ senders = {1}
+/\ live = {1, 2, 3}
+/\ mem = <<{1, 2, 3}, {1, 2, 3}, {1, 2, 3}, {}>>
+
+State 3: <Join line 125, col 5 to line 128, col 102 of module GsrpEgress>
+/\ epoch = 0
+/\ sess = "open"
+/\ segs = 1
+/\ S = <<0, 0, 1, 0>>
+/\ inserts = 1
+/\ resp = {}
+/\ view = <<3, 0, 0, 0>>
+/\ tomb = <<FALSE, FALSE, FALSE, FALSE>>
+/\ uage = <<0, 0, 0, 0>>
+/\ tg = 0
+/\ usrc = {}
+/\ sent = {<<3, 1>>}
+/\ lost = FALSE
+/\ uport = <<0, 0, 0, 0>>
+/\ answered = 0
+/\ senders = {1}
+/\ live = {1, 2, 3, 4}
+/\ mem = <<{1, 2, 3}, {1, 2, 3}, {1, 2, 3}, {1, 2, 3, 4}>>
+
+State 4: <SendSeg line 99, col 5 to line 111, col 70 of module GsrpEgress>
+/\ epoch = 0
+/\ sess = "open"
+/\ segs = 2
+/\ S = <<0, 0, 1, 1>>
+/\ inserts = 2
+/\ resp = {}
+/\ view = <<3, 0, 0, 4>>
+/\ tomb = <<FALSE, FALSE, FALSE, FALSE>>
+/\ uage = <<0, 0, 0, 0>>
+/\ tg = 0
+/\ usrc = {}
+/\ sent = {<<3, 1>>, <<4, 1>>}
+/\ lost = FALSE
+/\ uport = <<0, 0, 0, 0>>
+/\ answered = 0
+/\ senders = {1, 4}
+/\ live = {1, 2, 3, 4}
+/\ mem = <<{1, 2, 3}, {1, 2, 3}, {1, 2, 3}, {1, 2, 3, 4}>>

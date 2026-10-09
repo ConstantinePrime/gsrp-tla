@@ -1,0 +1,132 @@
+Error: Temporal properties were violated.
+
+Error: The following behavior constitutes a counter-example:
+
+State 1: <Initial predicate>
+/\ xs = 1
+/\ netAfter = {}
+/\ ys = 3
+/\ cur = [ t |-> "msg",
+  h |->
+      { [ t |-> "kem",
+          key |-> [t |-> "key", k |-> "ck", n |-> 1, l |-> "in"],
+          sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 1] ],
+        [ t |-> "kem",
+          key |-> [t |-> "key", k |-> "ck", n |-> 2, l |-> "in"],
+          sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 2] ] },
+  q |->
+      [ t |-> "enc",
+        key |-> [t |-> "key", k |-> "ck", n |-> 1, l |-> "in"],
+        body |->
+            [ t |-> "msg",
+              h |->
+                  { [ t |-> "kem",
+                      key |-> [t |-> "key", k |-> "ck", n |-> 3, l |-> "eg"],
+                      sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 3] ],
+                    [ t |-> "kem",
+                      key |-> [t |-> "key", k |-> "ck", n |-> 4, l |-> "eg"],
+                      sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 4] ] },
+              q |->
+                  [ t |-> "enc",
+                    key |-> [t |-> "key", k |-> "ck", n |-> 3, l |-> "eg"],
+                    body |-> [t |-> "m"] ] ] ] ]
+/\ leaver = 0
+/\ leaverKeys = {}
+/\ stage = "client"
+/\ pos = 0
+/\ hops = 0
+/\ ep = <<0, 0, 0, 0>>
+/\ net = {}
+/\ departed = {}
+/\ ret = <<{0}, {0}, {0}, {0}>>
+/\ lateKeys = {}
+/\ cep = [C1 |-> 0]
+/\ seen = <<{}, {}, {}, {}>>
+/\ exitNode = 0
+
+State 2: <Dispatch line 207, col 5 to line 211, col 102 of module GsrpChannel>
+/\ xs = 1
+/\ netAfter = {}
+/\ ys = 3
+/\ cur = [ t |-> "msg",
+  h |->
+      { [ t |-> "kem",
+          key |-> [t |-> "key", k |-> "ck", n |-> 1, l |-> "in"],
+          sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 1] ],
+        [ t |-> "kem",
+          key |-> [t |-> "key", k |-> "ck", n |-> 2, l |-> "in"],
+          sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 2] ] },
+  q |->
+      [ t |-> "enc",
+        key |-> [t |-> "key", k |-> "ck", n |-> 1, l |-> "in"],
+        body |->
+            [ t |-> "msg",
+              h |->
+                  { [ t |-> "kem",
+                      key |-> [t |-> "key", k |-> "ck", n |-> 3, l |-> "eg"],
+                      sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 3] ],
+                    [ t |-> "kem",
+                      key |-> [t |-> "key", k |-> "ck", n |-> 4, l |-> "eg"],
+                      sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 4] ] },
+              q |->
+                  [ t |-> "enc",
+                    key |-> [t |-> "key", k |-> "ck", n |-> 3, l |-> "eg"],
+                    body |-> [t |-> "m"] ] ] ] ]
+/\ leaver = 0
+/\ leaverKeys = {}
+/\ stage = "ingress"
+/\ pos = 2
+/\ hops = 0
+/\ ep = <<0, 0, 0, 0>>
+/\ net = {}
+/\ departed = {}
+/\ ret = <<{0}, {0}, {0}, {0}>>
+/\ lateKeys = {}
+/\ cep = [C1 |-> 0]
+/\ seen = <<{}, {}, {}, {}>>
+/\ exitNode = 0
+
+State 3: <Ingress line 214, col 5 to line 219, col 49 of module GsrpChannel>
+/\ xs = 1
+/\ netAfter = {}
+/\ ys = 3
+/\ cur = [ t |-> "msg",
+  h |->
+      { [ t |-> "kem",
+          key |-> [t |-> "key", k |-> "ck", n |-> 1, l |-> "in"],
+          sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 1] ],
+        [ t |-> "kem",
+          key |-> [t |-> "key", k |-> "ck", n |-> 2, l |-> "in"],
+          sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 2] ] },
+  q |->
+      [ t |-> "enc",
+        key |-> [t |-> "key", k |-> "ck", n |-> 1, l |-> "in"],
+        body |->
+            [ t |-> "msg",
+              h |->
+                  { [ t |-> "kem",
+                      key |-> [t |-> "key", k |-> "ck", n |-> 3, l |-> "eg"],
+                      sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 3] ],
+                    [ t |-> "kem",
+                      key |-> [t |-> "key", k |-> "ck", n |-> 4, l |-> "eg"],
+                      sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 4] ] },
+              q |->
+                  [ t |-> "enc",
+                    key |-> [t |-> "key", k |-> "ck", n |-> 3, l |-> "eg"],
+                    body |-> [t |-> "m"] ] ] ] ]
+/\ leaver = 0
+/\ leaverKeys = {}
+/\ stage = "dropped"
+/\ pos = 2
+/\ hops = 0
+/\ ep = <<0, 0, 0, 0>>
+/\ net = {}
+/\ departed = {}
+/\ ret = <<{0}, {0}, {0}, {0}>>
+/\ lateKeys = {}
+/\ cep = [C1 |-> 0]
+/\ seen = <<{}, {}, {}, {}>>
+/\ exitNode = 0
+
+State 4: Stuttering
+Finished checking temporal properties in 00s at 2026-10-09 15:25:50
