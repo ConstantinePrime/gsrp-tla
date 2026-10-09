@@ -1,0 +1,123 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 114 and seed -4933322265346294685 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 66706] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/GsrpEgress.tla
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/eg_udp_tight.tmp/Integers.tla
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/eg_udp_tight.tmp/FiniteSets.tla
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/eg_udp_tight.tmp/TLC.tla
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/eg_udp_tight.tmp/Naturals.tla
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/eg_udp_tight.tmp/Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module GsrpEgress
+Starting... (2026-10-09 15:29:49)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-10-09 15:29:49.
+Error: Invariant UdpReturn is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ epoch = 0
+/\ sess = "open"
+/\ segs = 0
+/\ S = <<0, 0, 0, 0>>
+/\ inserts = 0
+/\ resp = {}
+/\ view = <<0, 0, 0, 0>>
+/\ tomb = <<FALSE, FALSE, FALSE, FALSE>>
+/\ uage = <<0, 0, 0, 0>>
+/\ tg = 0
+/\ usrc = {}
+/\ sent = {}
+/\ lost = FALSE
+/\ uport = <<0, 0, 0, 0>>
+/\ answered = 0
+/\ senders = {}
+/\ live = {1, 2, 3}
+/\ mem = <<{1, 2, 3}, {1, 2, 3}, {1, 2, 3}, {}>>
+
+State 2: <UdpSend line 151, col 5 to line 158, col 56 of module GsrpEgress>
+/\ epoch = 0
+/\ sess = "open"
+/\ segs = 1
+/\ S = <<0, 0, 0, 0>>
+/\ inserts = 0
+/\ resp = {[v |-> 1, p |-> 1, age |-> 0]}
+/\ view = <<0, 0, 0, 0>>
+/\ tomb = <<FALSE, FALSE, FALSE, FALSE>>
+/\ uage = <<0, 0, 0, 0>>
+/\ tg = 0
+/\ usrc = {<<1, 1>>}
+/\ sent = {}
+/\ lost = FALSE
+/\ uport = <<1, 0, 0, 0>>
+/\ answered = 0
+/\ senders = {}
+/\ live = {1, 2, 3}
+/\ mem = <<{1, 2, 3}, {1, 2, 3}, {1, 2, 3}, {}>>
+
+State 3: <Tick line 162, col 5 to line 168, col 68 of module GsrpEgress>
+/\ epoch = 0
+/\ sess = "open"
+/\ segs = 1
+/\ S = <<0, 0, 0, 0>>
+/\ inserts = 0
+/\ resp = {[v |-> 1, p |-> 1, age |-> 1]}
+/\ view = <<0, 0, 0, 0>>
+/\ tomb = <<FALSE, FALSE, FALSE, FALSE>>
+/\ uage = <<1, 0, 0, 0>>
+/\ tg = 0
+/\ usrc = {<<1, 1>>}
+/\ sent = {}
+/\ lost = FALSE
+/\ uport = <<1, 0, 0, 0>>
+/\ answered = 0
+/\ senders = {}
+/\ live = {1, 2, 3}
+/\ mem = <<{1, 2, 3}, {1, 2, 3}, {1, 2, 3}, {}>>
+
+State 4: <Tick line 162, col 5 to line 168, col 68 of module GsrpEgress>
+/\ epoch = 0
+/\ sess = "open"
+/\ segs = 1
+/\ S = <<0, 0, 0, 0>>
+/\ inserts = 0
+/\ resp = {[v |-> 1, p |-> 1, age |-> 2]}
+/\ view = <<0, 0, 0, 0>>
+/\ tomb = <<FALSE, FALSE, FALSE, FALSE>>
+/\ uage = <<2, 0, 0, 0>>
+/\ tg = 0
+/\ usrc = {<<1, 1>>}
+/\ sent = {}
+/\ lost = FALSE
+/\ uport = <<0, 0, 0, 0>>
+/\ answered = 0
+/\ senders = {}
+/\ live = {1, 2, 3}
+/\ mem = <<{1, 2, 3}, {1, 2, 3}, {1, 2, 3}, {}>>
+
+State 5: <Next line 181, col 8 to line 181, col 33 of module GsrpEgress>
+/\ epoch = 0
+/\ sess = "open"
+/\ segs = 1
+/\ S = <<0, 0, 0, 0>>
+/\ inserts = 0
+/\ resp = {}
+/\ view = <<0, 0, 0, 0>>
+/\ tomb = <<FALSE, FALSE, FALSE, FALSE>>
+/\ uage = <<2, 0, 0, 0>>
+/\ tg = 0
+/\ usrc = {<<1, 1>>}
+/\ sent = {}
+/\ lost = TRUE
+/\ uport = <<0, 0, 0, 0>>
+/\ answered = 0
+/\ senders = {}
+/\ live = {1, 2, 3}
+/\ mem = <<{1, 2, 3}, {1, 2, 3}, {1, 2, 3}, {}>>
+
+344 states generated, 186 distinct states found, 134 states left on queue.
+The depth of the complete state graph search is 5.
+The average outdegree of the complete state graph is 4 (minimum is 1, the maximum 7 and the 95th percentile is 7).
+Finished in 00s at (2026-10-09 15:29:49)

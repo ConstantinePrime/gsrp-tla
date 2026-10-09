@@ -1,0 +1,83 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 112 and seed 7973145682075984098 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 66295] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/GsrpEgress.tla
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/eg_choose_gossip.tmp/Integers.tla
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/eg_choose_gossip.tmp/FiniteSets.tla
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/eg_choose_gossip.tmp/TLC.tla
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/eg_choose_gossip.tmp/Naturals.tla
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/eg_choose_gossip.tmp/Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module GsrpEgress
+Starting... (2026-10-09 15:29:41)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-10-09 15:29:42.
+Error: Invariant OneFacade is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ epoch = 0
+/\ sess = "open"
+/\ segs = 0
+/\ S = <<0, 0, 0, 0>>
+/\ inserts = 0
+/\ resp = {}
+/\ view = <<0, 0, 0, 0>>
+/\ tomb = <<FALSE, FALSE, FALSE, FALSE>>
+/\ uage = <<0, 0, 0, 0>>
+/\ tg = 0
+/\ usrc = {}
+/\ sent = {}
+/\ lost = FALSE
+/\ uport = <<0, 0, 0, 0>>
+/\ answered = 0
+/\ senders = {}
+/\ live = {1, 2, 3}
+/\ mem = <<{1, 2, 3}, {1, 2, 3}, {1, 2, 3}, {}>>
+
+State 2: <SendSeg line 99, col 5 to line 111, col 70 of module GsrpEgress>
+/\ epoch = 0
+/\ sess = "open"
+/\ segs = 1
+/\ S = <<1, 0, 0, 0>>
+/\ inserts = 1
+/\ resp = {}
+/\ view = <<1, 0, 0, 0>>
+/\ tomb = <<FALSE, FALSE, FALSE, FALSE>>
+/\ uage = <<0, 0, 0, 0>>
+/\ tg = 0
+/\ usrc = {}
+/\ sent = {<<1, 1>>}
+/\ lost = FALSE
+/\ uport = <<0, 0, 0, 0>>
+/\ answered = 0
+/\ senders = {1}
+/\ live = {1, 2, 3}
+/\ mem = <<{1, 2, 3}, {1, 2, 3}, {1, 2, 3}, {}>>
+
+State 3: <SendSeg line 99, col 5 to line 111, col 70 of module GsrpEgress>
+/\ epoch = 0
+/\ sess = "open"
+/\ segs = 2
+/\ S = <<1, 1, 0, 0>>
+/\ inserts = 2
+/\ resp = {}
+/\ view = <<1, 2, 0, 0>>
+/\ tomb = <<FALSE, FALSE, FALSE, FALSE>>
+/\ uage = <<0, 0, 0, 0>>
+/\ tg = 0
+/\ usrc = {}
+/\ sent = {<<1, 1>>, <<2, 1>>}
+/\ lost = FALSE
+/\ uport = <<0, 0, 0, 0>>
+/\ answered = 0
+/\ senders = {1, 2}
+/\ live = {1, 2, 3}
+/\ mem = <<{1, 2, 3}, {1, 2, 3}, {1, 2, 3}, {}>>
+
+22 states generated, 22 distinct states found, 19 states left on queue.
+The depth of the complete state graph search is 3.
+The average outdegree of the complete state graph is 18 (minimum is 18, the maximum 18 and the 95th percentile is 18).
+Finished in 00s at (2026-10-09 15:29:42)
