@@ -10,6 +10,12 @@ R_{z⋆}(t)[θ] = ρ_θ. Entries are removed on FIN/RST or expiry; nothing
 says they survive the move from epoch t to t + 1. Read as written, the
 tables of epoch t + 1 start empty.
 
+The text also points the other way: removal "at t > τ_exp", and the UDP
+rule U_v(t) ← {… : t ≤ τ_exp}, only make sense if entries persist while t
+advances. The two readings are an ambiguity, and the literal one is the
+row of its own; the amendment states the reading under which sessions
+work.
+
 ## Counterexample
 
 `eg_epoch_pub` (`EPOCHS`, `CARRY = "published"`). Trace

@@ -1,5 +1,6 @@
+inputs: c37d25841d7d903efe76e6bc3886c627420718ed778d57794421f4ec9dd4dee6 839f70c352b3cab7605a5ad6c73660350fab2c945cc1fb323d592a47f49cc5f7 936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88
 TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
-Running breadth-first search Model-Checking with fp 28 and seed 7934547576654403305 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 69686] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Running breadth-first search Model-Checking with fp 126 and seed -4693213150522952810 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 105303] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/GsrpEgress.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/eg_cleanup.tmp/Integers.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/eg_cleanup.tmp/FiniteSets.tla
@@ -12,13 +13,13 @@ Semantic processing of module Sequences
 Semantic processing of module FiniteSets
 Semantic processing of module TLC
 Semantic processing of module GsrpEgress
-Starting... (2026-10-09 15:34:21)
+Starting... (2026-10-09 17:05:10)
 Implied-temporal checking--satisfiability problem has 1 branches.
 Computing initial states...
-Finished computing initial states: 1 distinct state generated at 2026-10-09 15:34:21.
-Progress(9) at 2026-10-09 15:34:22: 1,005 states generated, 405 distinct states found, 0 states left on queue.
-Checking temporal properties for the complete state space with 405 total distinct states at (2026-10-09 15:34:22)
-Finished checking temporal properties in 00s at 2026-10-09 15:34:22
+Finished computing initial states: 1 distinct state generated at 2026-10-09 17:05:10.
+Progress(9) at 2026-10-09 17:05:10: 1,005 states generated, 405 distinct states found, 0 states left on queue.
+Checking temporal properties for the complete state space with 405 total distinct states at (2026-10-09 17:05:10)
+Finished checking temporal properties in 00s at 2026-10-09 17:05:10
 Model checking completed. No error has been found.
   Estimates of the probability that TLC did not check all reachable states
   because two distinct states had the same fingerprint:
@@ -26,4 +27,4 @@ Model checking completed. No error has been found.
 1005 states generated, 405 distinct states found, 0 states left on queue.
 The depth of the complete state graph search is 9.
 The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 6 and the 95th percentile is 3).
-Finished in 00s at (2026-10-09 15:34:22)
+Finished in 00s at (2026-10-09 17:05:10)

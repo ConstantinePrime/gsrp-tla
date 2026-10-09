@@ -1,5 +1,6 @@
+inputs: c37d25841d7d903efe76e6bc3886c627420718ed778d57794421f4ec9dd4dee6 ea98f4819aae8e0ce4a46714f85b91ff33124a6e20f2b8ece1e8c802c1dadd89 936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88
 TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
-Running breadth-first search Model-Checking with fp 68 and seed -7676233246837061299 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 69595] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Running breadth-first search Model-Checking with fp 123 and seed 6077105265629060160 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 105210] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/GsrpEgress.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/eg_epoch_pub.tmp/Integers.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/eg_epoch_pub.tmp/FiniteSets.tla
@@ -12,9 +13,9 @@ Semantic processing of module Sequences
 Semantic processing of module FiniteSets
 Semantic processing of module TLC
 Semantic processing of module GsrpEgress
-Starting... (2026-10-09 15:34:20)
+Starting... (2026-10-09 17:05:08)
 Computing initial states...
-Finished computing initial states: 1 distinct state generated at 2026-10-09 15:34:20.
+Finished computing initial states: 1 distinct state generated at 2026-10-09 17:05:09.
 Error: Invariant OneFacade is violated.
 Error: The behavior up to this point is:
 State 1: <Initial predicate>
@@ -23,9 +24,11 @@ State 1: <Initial predicate>
 /\ segs = 0
 /\ S = <<0, 0, 0, 0>>
 /\ inserts = 0
+/\ pend = <<0, 0, 0, 0>>
 /\ resp = {}
 /\ view = <<0, 0, 0, 0>>
 /\ tomb = <<FALSE, FALSE, FALSE, FALSE>>
+/\ rel = {}
 /\ uage = <<0, 0, 0, 0>>
 /\ tg = 0
 /\ usrc = {}
@@ -37,15 +40,17 @@ State 1: <Initial predicate>
 /\ live = {1, 2, 3}
 /\ mem = <<{1, 2, 3}, {1, 2, 3}, {1, 2, 3}, {}>>
 
-State 2: <SendSeg line 99, col 5 to line 111, col 70 of module GsrpEgress>
+State 2: <SendSeg line 116, col 5 to line 136, col 70 of module GsrpEgress>
 /\ epoch = 0
 /\ sess = "open"
 /\ segs = 1
 /\ S = <<0, 0, 1, 0>>
 /\ inserts = 1
+/\ pend = <<0, 0, 0, 0>>
 /\ resp = {}
 /\ view = <<3, 0, 0, 0>>
 /\ tomb = <<FALSE, FALSE, FALSE, FALSE>>
+/\ rel = {}
 /\ uage = <<0, 0, 0, 0>>
 /\ tg = 0
 /\ usrc = {}
@@ -57,15 +62,17 @@ State 2: <SendSeg line 99, col 5 to line 111, col 70 of module GsrpEgress>
 /\ live = {1, 2, 3}
 /\ mem = <<{1, 2, 3}, {1, 2, 3}, {1, 2, 3}, {}>>
 
-State 3: <Boundary line 140, col 5 to line 145, col 93 of module GsrpEgress>
+State 3: <Boundary line 167, col 5 to line 172, col 99 of module GsrpEgress>
 /\ epoch = 1
 /\ sess = "open"
 /\ segs = 1
 /\ S = <<0, 0, 0, 0>>
 /\ inserts = 1
+/\ pend = <<0, 0, 0, 0>>
 /\ resp = {}
 /\ view = <<0, 0, 0, 0>>
 /\ tomb = <<FALSE, FALSE, FALSE, FALSE>>
+/\ rel = {}
 /\ uage = <<0, 0, 0, 0>>
 /\ tg = 0
 /\ usrc = {}
@@ -77,15 +84,17 @@ State 3: <Boundary line 140, col 5 to line 145, col 93 of module GsrpEgress>
 /\ live = {1, 2, 3}
 /\ mem = <<{1, 2, 3}, {1, 2, 3}, {1, 2, 3}, {}>>
 
-State 4: <SendSeg line 99, col 5 to line 111, col 70 of module GsrpEgress>
+State 4: <SendSeg line 116, col 5 to line 136, col 70 of module GsrpEgress>
 /\ epoch = 1
 /\ sess = "open"
 /\ segs = 2
 /\ S = <<0, 0, 2, 0>>
 /\ inserts = 2
+/\ pend = <<0, 0, 0, 0>>
 /\ resp = {}
 /\ view = <<3, 0, 0, 0>>
 /\ tomb = <<FALSE, FALSE, FALSE, FALSE>>
+/\ rel = {}
 /\ uage = <<0, 0, 0, 0>>
 /\ tg = 0
 /\ usrc = {}
@@ -100,4 +109,4 @@ State 4: <SendSeg line 99, col 5 to line 111, col 70 of module GsrpEgress>
 96 states generated, 72 distinct states found, 56 states left on queue.
 The depth of the complete state graph search is 4.
 The average outdegree of the complete state graph is 5 (minimum is 1, the maximum 7 and the 95th percentile is 7).
-Finished in 00s at (2026-10-09 15:34:20)
+Finished in 00s at (2026-10-09 17:05:09)

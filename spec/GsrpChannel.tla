@@ -34,7 +34,7 @@
 EXTENDS Integers, FiniteSets, Sequences, TLC
 
 CONSTANTS
-    SCENARIO,        \* "pub", "priv", "bridge", "nobridge", "reducible"
+    SCENARIO,        \* "pub", "priv", "bridge", "bridge_all", "nobridge", "reducible"
     PEEL,            \* "published": receivers keep the hop layers; "amended": they remove them
     ONION,           \* "literal", "per_packet", "kem_dem" (see Layer)
     KEYS,            \* key of the onion layers in a private cluster: "node" (individual),
@@ -61,18 +61,19 @@ ASSUME /\ PEEL \in {"published", "amended"} /\ ONION \in {"literal", "per_packet
 (*   priv       the same cluster, private                                  *)
 (*   bridge     C1 = {1,2} public, C2 = {3,4,5} private, I = {1,2},        *)
 (*              O = {4,5}, complete inside each, bridge 2 -> 3             *)
+(*   bridge_all as bridge, but O = C2: the whole egress cluster is egress  *)
 (*   nobridge   as bridge without the bridge                               *)
 (*   reducible  as pub, but the support of P_C splits into {1,2}, {3,4}    *)
 (***************************************************************************)
-TwoClusters == SCENARIO \in {"bridge", "nobridge"}
+TwoClusters == SCENARIO \in {"bridge", "bridge_all", "nobridge"}
 Node     == IF TwoClusters THEN 1..5 ELSE 1..4
 Clusters == IF TwoClusters THEN ("C1" :> {1, 2}) @@ ("C2" :> {3, 4, 5}) ELSE ("C1" :> {1, 2, 3, 4})
 Private  == CASE SCENARIO = "priv" -> {"C1"} [] TwoClusters -> {"C2"} [] OTHER -> {}
 I == {1, 2}
-O == IF TwoClusters THEN {4, 5} ELSE {3, 4}
+O == CASE SCENARIO = "bridge_all" -> {3, 4, 5} [] TwoClusters -> {4, 5} [] OTHER -> {3, 4}
 
 Complete(S) == {<<u, v>> \in S \X S : u # v}
-Bridge  == IF SCENARIO = "bridge" THEN {<<2, 3>>} ELSE {}
+Bridge  == IF SCENARIO \in {"bridge", "bridge_all"} THEN {<<2, 3>>} ELSE {}
 Support == IF SCENARIO = "reducible" THEN {<<1, 2>>, <<2, 1>>, <<3, 4>>, <<4, 3>>}
            ELSE UNION {Complete(Clusters[c]) : c \in DOMAIN Clusters} \cup Bridge
 
@@ -177,7 +178,10 @@ CanOpen(v, x) ==
     /\ x.t = "msg" /\ x.q.t = "enc"
     /\ \E e \in x.h : e.sec \in KeysOf(v) /\ e.key = x.q.key
 
-MustExit(y) == y \in O /\ (ONION = "literal" \/ (ONION = "per_packet" /\ y = ys))
+\* PRA's transition operator sends a message at any u in O to Srv. Under the
+\* literal reading and KEM-DEM the walk therefore exits at the first egress
+\* it reaches; under per-packet targeting, at the targeted egress.
+MustExit(y) == y \in O /\ (ONION \in {"literal", "kem_dem"} \/ (ONION = "per_packet" /\ y = ys))
 CanExit(y)  == y \in O /\ (ONION # "per_packet" \/ y = ys)
 
 \* Under kem_dem the build-time choice of xs and ys plays no role (Leave
@@ -237,8 +241,10 @@ Exit(y) ==
     /\ UNCHANGED <<xs, ys, hops, net, seen, ep, ret, cep, departed, leaver, leaverKeys,
                    netAfter, lateKeys>>
 
+\* A rotation while the message is on its way (after Dispatch), or after
+\* delivery (for the late compromise).
 Rotate(v) ==
-    /\ ALLOW_ROTATE /\ ep[v] = 0
+    /\ ALLOW_ROTATE /\ ep[v] = 0 /\ stage # "client"
     /\ ep' = [ep EXCEPT ![v] = 1]
     /\ ret' = [ret EXCEPT ![v] = IF GRACE = 1 THEN {0, 1} ELSE {1}]
     /\ UNCHANGED <<xs, ys, stage, pos, cur, hops, net, seen, cep, departed, leaver, leaverKeys,
@@ -270,6 +276,11 @@ Fairness ==
 
 Spec == Init /\ [][Next]_vars /\ Fairness
 
+\* The same behaviours without fairness, for rows that check only safety
+\* properties stated as actions (fairness adds nothing there and makes TLC
+\* build the liveness graph).
+SafetySpec == Init /\ [][Next]_vars
+
 (***************************************************************************)
 (* Properties                                                              *)
 (***************************************************************************)
@@ -281,7 +292,17 @@ TypeOK ==
     /\ departed \subseteq Node /\ leaver \in Node \cup {0}
 
 KnowNode(v) == Know(NodeKeys(v) \cup seen[v])
-KnowBad     == Know(UNION {NodeKeys(b) \cup seen[b] : b \in Bad}
+
+\* A compromised node keeps every key it ever held: secret keys of past
+\* epochs, the keys it had when it left, cluster keys of every epoch it was
+\* a member for. So the coalition's knowledge only grows.
+EverKeys(b) ==
+    NodeKeys(b) \cup {SK(b, e) : e \in 0..ep[b]}
+      \cup (IF b = leaver THEN leaverKeys ELSE {})
+      \cup UNION {{CSK(p[1], p[2]), SC(p[1], p[2])} :
+                    p \in {q \in Private \X (0..1) : b \in Clusters[q[1]] /\ b \notin departed
+                                                    /\ q[2] <= cep[q[1]]}}
+KnowBad     == Know(UNION {EverKeys(b) \cup seen[b] : b \in Bad}
                     \cup (IF OBSERVER = "global" THEN net ELSE {}))
 
 \* PRA: "no intermediary cluster or relay node can see the payload before it
@@ -293,9 +314,16 @@ PayloadNeedsEgress == Pay \in KnowBad => Bad \cap O # {}
 
 \* Premise of Phi_N = sum X_i F_i (CMP): a compromised egress sees exactly
 \* the traffic that exits through it. Checked when the message has left:
-\* knowledge only grows, and every behaviour can be extended to an exit
-\* (EgressReachable), so no exposure is missed.
+\* the coalition's knowledge only grows (EverKeys, net, seen), so an
+\* exposure at any earlier state is still there at completion.
 ExposureByExit == stage = "done" => (Pay \in KnowBad => exitNode \in Bad)
+
+\* The justification of ExposureByExit, checked: the coalition's keys and
+\* the terms it has received never shrink. Know is a closure, monotone in
+\* its argument, so what the coalition knows never shrinks either.
+BadKeys  == UNION {EverKeys(b) : b \in Bad}
+BadSeen  == UNION {seen[b] : b \in Bad} \cup (IF OBSERVER = "global" THEN net ELSE {})
+KnowledgeMonotone == [][BadKeys \subseteq BadKeys' /\ BadSeen \subseteq BadSeen']_vars
 
 RECURSIVE ReachFrom(_, _, _)
 ReachFrom(R, S, k) == IF k = 0 THEN S ELSE ReachFrom(R, S \cup {e[2] : e \in {f \in R : f[1] \in S}}, k - 1)
@@ -324,4 +352,5 @@ NoBadHandles       == \A b \in Bad : seen[b] = {}
 NoRotationInFlight == ~(stage \in {"ingress", "walk"} /\ \E v \in Node : ep[v] = 1)
 NoLate             == lateKeys = {}
 NoLeaveInFlight    == ~(leaver # 0 /\ netAfter # {})
+NoRotateLeaveInFlight == ~(stage \in {"ingress", "walk"} /\ leaver # 0 /\ \E v \in Node : ep[v] = 1)
 =============================================================================

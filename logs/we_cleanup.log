@@ -1,0 +1,90 @@
+inputs: c37d25841d7d903efe76e6bc3886c627420718ed778d57794421f4ec9dd4dee6 7f76c5df1bab14210f8923705f43847b550bc9ac8604896b4d55430eb199e2fd 936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 58 and seed -7249040626187480482 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 105861] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/GsrpEgress.tla
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/we_cleanup.tmp/Integers.tla
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/we_cleanup.tmp/FiniteSets.tla
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/we_cleanup.tmp/TLC.tla
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/we_cleanup.tmp/Naturals.tla
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/we_cleanup.tmp/Sequences.tla
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module GsrpEgress
+Starting... (2026-10-09 17:05:20)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-10-09 17:05:20.
+Error: Invariant NoStaleAfterClose is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ epoch = 0
+/\ sess = "open"
+/\ segs = 0
+/\ S = <<0, 0, 0, 0>>
+/\ inserts = 0
+/\ pend = <<0, 0, 0, 0>>
+/\ resp = {}
+/\ view = <<0, 0, 0, 0>>
+/\ tomb = <<FALSE, FALSE, FALSE, FALSE>>
+/\ rel = {}
+/\ uage = <<0, 0, 0, 0>>
+/\ tg = 0
+/\ usrc = {}
+/\ sent = {}
+/\ lost = FALSE
+/\ uport = <<0, 0, 0, 0>>
+/\ answered = 0
+/\ senders = {}
+/\ live = {1, 2, 3}
+/\ mem = <<{1, 2, 3}, {1, 2, 3}, {1, 2, 3}, {}>>
+
+State 2: <SendSeg line 116, col 5 to line 136, col 70 of module GsrpEgress>
+/\ epoch = 0
+/\ sess = "open"
+/\ segs = 1
+/\ S = <<0, 0, 1, 0>>
+/\ inserts = 1
+/\ pend = <<0, 0, 0, 0>>
+/\ resp = {}
+/\ view = <<3, 0, 0, 0>>
+/\ tomb = <<FALSE, FALSE, FALSE, FALSE>>
+/\ rel = {}
+/\ uage = <<0, 0, 0, 0>>
+/\ tg = 0
+/\ usrc = {}
+/\ sent = {<<3, 1>>}
+/\ lost = FALSE
+/\ uport = <<0, 0, 0, 0>>
+/\ answered = 0
+/\ senders = {1}
+/\ live = {1, 2, 3}
+/\ mem = <<{1, 2, 3}, {1, 2, 3}, {1, 2, 3}, {}>>
+
+State 3: <Fin line 158, col 5 to line 164, col 88 of module GsrpEgress>
+/\ epoch = 0
+/\ sess = "closed"
+/\ segs = 1
+/\ S = <<0, 0, 0, 0>>
+/\ inserts = 1
+/\ pend = <<0, 0, 0, 0>>
+/\ resp = {}
+/\ view = <<3, 0, 0, 0>>
+/\ tomb = <<FALSE, FALSE, TRUE, FALSE>>
+/\ rel = {}
+/\ uage = <<0, 0, 0, 0>>
+/\ tg = 0
+/\ usrc = {}
+/\ sent = {<<3, 1>>}
+/\ lost = FALSE
+/\ uport = <<0, 0, 0, 0>>
+/\ answered = 0
+/\ senders = {1}
+/\ live = {1, 2, 3}
+/\ mem = <<{1, 2, 3}, {1, 2, 3}, {1, 2, 3}, {}>>
+
+13 states generated, 13 distinct states found, 10 states left on queue.
+The depth of the complete state graph search is 3.
+The average outdegree of the complete state graph is 6 (minimum is 6, the maximum 6 and the 95th percentile is 6).
+Finished in 00s at (2026-10-09 17:05:20)

@@ -59,18 +59,24 @@ ROWS = [
     ('ch_pub_kemdem', C, dict(ONION='"kem_dem"', Bad='{1, 2}', OBSERVER='"global"'), CONF,
      [], HOLDS, 'KEM-DEM completion, same adversary.'),
     ('ch_disp_visit', C, dict(ONION='"kem_dem"', Bad='{3}'), ['TypeOK', 'ExposureByExit'], [],
-     viol('ExposureByExit'),
-     'KEM-DEM, egress 3 compromised: it reads a message that only passes through it.'),
+     HOLDS,
+     'KEM-DEM, egress 3 compromised, CMP\'s adversary (relays only): the walk exits at\n'
+     'the first egress it reaches, so 3 reads only what exits through it.'),
     ('ch_disp_obs', C, dict(SCENARIO='"priv"', ONION='"kem_dem"', Bad='{3}', OBSERVER='"global"'),
      ['TypeOK', 'ExposureByExit'], [], viol('ExposureByExit'),
-     'KEM-DEM, private cluster, egress 3 compromised plus observer: 3 derives every\n'
-     'link key from s_C and reads messages that never touch it.'),
+     'KEM-DEM, private cluster, egress 3 compromised plus a global passive observer\n'
+     '(beyond CMP\'s adversary): 3 derives every link key from s_C and reads messages\n'
+     'that never touch it.'),
     ('ch_disp_perpacket', C, dict(SCENARIO='"priv"', Bad='{3}', OBSERVER='"global"'),
      ['TypeOK', 'ExposureByExit'], [], HOLDS,
      'Per-packet completion, same adversary: exposure only through the exit node.'),
     ('ch_priv_cluster', C, dict(SCENARIO='"bridge"', KEYS='"cluster"'),
      ['TypeOK', 'NoPayloadBeforeEgress'], [], viol('NoPayloadBeforeEgress'),
      'Egress layer under the private cluster key: non-egress member 3 opens it.'),
+    ('ch_priv_cluster_all', C, dict(SCENARIO='"bridge_all"', KEYS='"cluster"', Bad='{3}'),
+     ['TypeOK', 'ExposureByExit'], [], viol('ExposureByExit'),
+     'Cluster key, read with O = C2 (every member an egress): no relay is a\n'
+     'non-egress, but egress 3 reads a message that exits at another egress.'),
     ('ch_priv_node', C, dict(SCENARIO='"bridge"'), ['TypeOK', 'NoPayloadBeforeEgress'], [], HOLDS,
      'Egress layer under individual node keys.'),
     ('ch_priv_ingress', C, dict(SCENARIO='"priv"', KEYS='"ingress"', Bad='{1, 2}',
@@ -118,6 +124,20 @@ ROWS = [
                         ALLOW_ROTATE='TRUE', ALLOW_LEAVE='TRUE'),
      ['TypeOK', 'EgressReachable'], ['Delivered'], HOLDS,
      'Resolved protocol: every message is delivered despite rotation and departure.'),
+    ('ch_know_monotone', C, dict(SCENARIO='"priv"', Bad='{3}', GRACE=0, ALLOW_ROTATE='TRUE',
+                                 ALLOW_LEAVE='TRUE', REKEY_ON_LEAVE='TRUE', SPEC='SafetySpec'),
+     ['TypeOK'], ['KnowledgeMonotone'], HOLDS,
+     'The coalition\'s knowledge only grows, even when its egress rotates without grace\n'
+     'or leaves: compromised nodes keep the keys they held (premise of ExposureByExit).'),
+    ('wc_am', C, live(SCENARIO='"priv"', KEYS='"ingress"', REKEY_ON_LEAVE='TRUE',
+                      ALLOW_ROTATE='TRUE', ALLOW_LEAVE='TRUE'),
+     ['NoRotateLeaveInFlight'], [], viol('NoRotateLeaveInFlight'),
+     'Witness for am_*: a rotation and a departure both happen while the message is\n'
+     'in flight.'),
+    ('wc_am_bridge', C, dict(SCENARIO='"bridge"', KEYS='"ingress"', REKEY_ON_LEAVE='TRUE',
+                             ALLOW_ROTATE='TRUE', ALLOW_LEAVE='TRUE', Bad='{3}',
+                             OBSERVER='"global"'), ['NoBadHandles'], [], viol('NoBadHandles'),
+     'Witness for am_bridge: compromised member 3 handles the message.'),
     ('wc_delivered', C, live(), ['NotDelivered'], [], viol('NotDelivered'),
      'Witness: the message reaches Srv.'),
     ('wc_bridge', C, dict(SCENARIO='"bridge"'), ['NoBridge'], [], viol('NoBridge'),
@@ -134,6 +154,10 @@ ROWS = [
     # --- GsrpEgress ---
     ('eg_choose_gossip', E, dict(FACADE='"choose"'), ['TypeOK', 'OneFacade'], [],
      viol('OneFacade'), 'Facade chosen freely, T_C kept by gossip: two members open theta.'),
+    ('eg_relation', E, dict(TABLE='"relation"', FACADE='"choose"'), ['TypeOK', 'OneFacade'], [],
+     viol('OneFacade'),
+     'T_C linearisable (as under consensus), but lookup and insert are separate steps,\n'
+     'as DON writes them: two members both find theta absent and insert two facades.'),
     ('eg_hash_gossip', E, {}, ['TypeOK', 'OneFacade', 'ReturnPath'], [], HOLDS,
      'Facade a function of the membership view, no churn.'),
     ('eg_hash_churn', E, dict(CHURN='TRUE'), ['TypeOK', 'OneFacade'], [], viol('OneFacade'),
@@ -154,7 +178,9 @@ ROWS = [
     ('eg_udp_tight', E, dict(MODE='"udp"', TauExp=1), ['TypeOK', 'UdpReturn'], [],
      viol('UdpReturn'), 'TauExp < RTT: the entry expires before the response.'),
     ('eg_udp_source', E, dict(MODE='"udp"'), ['TypeOK', 'UdpSourceStable'], [],
-     viol('UdpSourceStable'), 'The server sees several sources for one UDP flow.'),
+     viol('UdpSourceStable'),
+     'Published: "seamless for the recipient"; the server sees several sources for one\n'
+     'UDP flow.'),
     ('am_tcp', E, dict(TABLE='"consensus"', FACADE='"choose"', CHURN='TRUE', EPOCHS='TRUE'),
      ['TypeOK', 'OneFacade', 'ReturnPath'], [], HOLDS,
      'Resolved egress: selection through consensus, tables carried across the epoch,\n'
@@ -168,6 +194,11 @@ ROWS = [
     ('we_join', E, dict(CHURN='TRUE'), ['NoJoin'], [], viol('NoJoin'), 'Witness: node 4 joins.'),
     ('we_epoch', E, dict(EPOCHS='TRUE'), ['NoBoundaryInSession'], [], viol('NoBoundaryInSession'),
      'Witness: an epoch boundary falls inside a session.'),
+    ('we_cleanup', E, {}, ['NoStaleAfterClose'], [], viol('NoStaleAfterClose'),
+     'Witness for eg_cleanup: a replica still holds theta after FIN/RST.'),
+    ('we_am_tcp', E, dict(TABLE='"consensus"', FACADE='"choose"', CHURN='TRUE', EPOCHS='TRUE'),
+     ['NoJoinBoundary'], [], viol('NoJoinBoundary'),
+     'Witness for am_tcp: a join and an epoch boundary both fall inside a session.'),
 ]
 
 # Rows left out of `make quick` (none so far; long rows go here).
@@ -177,9 +208,10 @@ SLOW = set()
 def cfg_text(module, overrides, invs, props, expected, comment):
     consts = dict(BASE[module])
     consts.update(overrides)
+    spec = consts.pop('SPEC', 'Spec')       # a row may name another specification
     lines = ['\\* ' + l for l in comment.split('\n')]
     lines.append('\\* Expected: ' + expected)
-    lines.append('SPECIFICATION Spec')
+    lines.append('SPECIFICATION ' + spec)
     lines.append('CONSTANTS')
     for k, v in consts.items():
         lines.append('    %s = %s' % (k, v))
@@ -198,7 +230,7 @@ def main():
     assert len(names) == len(set(names)), 'duplicate row name'
     expect, mk = [], []
     for name, module, ov, invs, props, exp, comment in ROWS:
-        assert set(ov) <= set(BASE[module]), (name, set(ov) - set(BASE[module]))
+        assert set(ov) <= set(BASE[module]) | {'SPEC'}, (name, set(ov) - set(BASE[module]))
         with open(os.path.join(OUT, name + '.cfg'), 'w') as f:
             f.write(cfg_text(module, ov, invs, props, exp, comment))
         expect.append('%s\t%s\t%s' % (name, module, exp))

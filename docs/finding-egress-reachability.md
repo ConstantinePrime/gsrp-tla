@@ -10,8 +10,11 @@ PRA requires each P_C to be aperiodic and irreducible on its support, so
 the walk inside a cluster reaches every member. Between clusters the walk
 follows Q_{i→j}, but "the edges between the clusters may not be set up
 initially, there is no requirement for clusters to maintain stable
-connections". The client chooses I and O with |I|, |O| ≥ k; no condition
-relates O to the clusters reachable from I.
+connections". When x needs a bridge that is not cached, "a new key pair
+must be initiated between the cluster nodes via KEM": PRA sets bridge keys
+up on demand, over an existing link. The client chooses I and O with
+|I|, |O| ≥ k; no condition relates O to the clusters reachable from I
+over the links that exist, the support of Q_{i→j}.
 
 ## Counterexample
 
@@ -26,7 +29,10 @@ inter-cluster link exists. Trace `traces/ch_reach_nobridge.trace.txt`:
 
 In state 3 no egress can be reached from node 1: `EgressReachable` is
 violated, which for a finite chain means the message is delivered with
-probability 0.
+probability 0. (`EgressReachable` is a necessary condition for almost-sure
+delivery, about the walk's graph only; the rows that claim delivery also
+check `Delivered` under strong fairness, which accounts for keys and
+drops.)
 
 `ch_reducible` removes irreducibility instead: the support of P_C splits
 into {1, 2} and {3, 4}, and the walk starting at an ingress never reaches

@@ -19,7 +19,8 @@ Every row of [`results.md`](results.md) supports one verdict:
 
 Where the text admits several readings, each is a constant and its
 literal reading is a row of its own. Witness rows negate the scenario a
-passing row relies on and must be violated, so no passing row is vacuous.
+passing row relies on and must be violated; [`results.md`](results.md)
+says which witness backs which passing row.
 
 ## What TLC can and cannot check
 
@@ -32,8 +33,14 @@ Two qualitative statements they rest on are in scope:
   set with probability 1 is equivalent to the target being reachable from
   every state reachable from the start, and to reaching it under strong
   fairness of every transition (Baier & Katoen, *Principles of Model
-  Checking*, 2008, ch. 10). `EgressReachable` checks the first form,
-  `Delivered` (strong fairness on every walk transition) the second.
+  Checking*, 2008, ch. 10). The model is not a pure Markov chain: Init,
+  Dispatch, Rotate and Leave are nondeterministic events. Each of them
+  happens at most a bounded number of times, so after the last one the
+  walk is a finite Markov chain, and the equivalence applies to it from
+  every state an adversarial schedule of those events can reach.
+  `Delivered` (strong fairness on every walk transition) is the claim.
+  `EgressReachable` checks the walk's graph only, ignoring keys and drops,
+  so it is a necessary condition, used to locate a failure.
 - **The premise of Φ_N = Σ X_i F_i.** The formula assumes that a
   compromised egress i observes exactly the share F_i of the traffic that
   exits through it. `ExposureByExit` checks when that holds.
@@ -48,7 +55,7 @@ Two qualitative statements they rest on are in scope:
 | `Ingress` | Decaps(SK_x, c_x^in), Dec_k(AD, M), or drop |
 | `Move` | S_{τ+1} ∼ P_C (Φ^intra: link layer over hop layer) or Q_{i→j} (Enc_{k_bridge}) |
 | `Exit` | Decaps(SK_y, c_y^eg), Dec_k(AD, M); M = m, S = Srv |
-| `Rotate` | per-entity epoch: a node's KEM key pair changes |
+| `Rotate` | per-entity epoch: a node's KEM key pair changes (once per node, after dispatch) |
 | `Leave` | a member leaves a private cluster |
 | `LateCompromise` | the exit node is compromised after rotating |
 
@@ -66,9 +73,10 @@ deriving hop and link keys from a known s_C.
 
 ### Adversary
 
-`Bad` is a set of compromised nodes with their keys and everything they
-received; `OBSERVER = "global"` adds a passive observer of every overlay
-link. `LATE = "exit"` compromises the exit node after it rotated, giving
+`Bad` is a set of compromised nodes with every key they ever held
+(`EverKeys`: past epochs, keys held at departure) and everything they
+received, so the coalition's knowledge only grows (`ch_know_monotone`);
+`OBSERVER = "global"` adds a passive observer of every overlay link. `LATE = "exit"` compromises the exit node after it rotated, giving
 the attacker the keys it then holds but not its past plaintexts (honest
 nodes erase). There is no active network attacker: the article's adversary
 is a set of compromised relays, B ⊆ V. The egress → Srv hop is outside the
@@ -81,6 +89,7 @@ overlay and not observed.
 | `pub` | C1 = {1,2,3,4} public | I = {1,2}, O = {3,4} | complete on C1 |
 | `priv` | C1 = {1,2,3,4} private | as `pub` | as `pub` |
 | `bridge` | C1 = {1,2} public, C2 = {3,4,5} private | I = {1,2}, O = {4,5} | complete inside each; bridge 2 → 3 (3 is not an egress) |
+| `bridge_all` | as `bridge` | I = {1,2}, O = {3,4,5} | as `bridge` (every member of C2 an egress) |
 | `nobridge` | as `bridge` | as `bridge` | no bridge |
 | `reducible` | as `pub` | as `pub` | {1,2} and {3,4} not connected |
 
@@ -89,7 +98,7 @@ overlay and not observed.
 | Constant | Values | Text it decides |
 |---|---|---|
 | `PEEL` | `"published"` / `"amended"` | PRA never says who removes the Φ^intra hop/link layers or the bridge layer; amended: the receiver does |
-| `ONION` | `"literal"` / `"per_packet"` / `"kem_dem"` | H holds an encapsulation for every x ∈ I and y ∈ O, but the layer is decrypted with k_x or k_y directly. `literal`: sealed under one node's key, others drop. `per_packet`: one ingress and one egress per packet, the walk continues to that egress. `kem_dem`: one content key encapsulated for every node of the set |
+| `ONION` | `"literal"` / `"per_packet"` / `"kem_dem"` | H holds an encapsulation for every x ∈ I and y ∈ O, but the layer is decrypted with k_x or k_y directly. `literal`: sealed under one node's key, others drop. `per_packet`: one ingress and one egress per packet, the walk continues to that egress. `kem_dem`: one content key encapsulated for every node of the set. Under `literal` and `kem_dem` the walk exits at the first egress it reaches, as PRA's transition operator sends any u ∈ O to Srv |
 | `KEYS` | `"cluster"` / `"node"` / `"ingress"` | PRA: "with private structures a client can use the cluster public key instead of individual keys". `node`: individual keys for both layers; `ingress`: the cluster key for the ingress layer only (resolution G3) |
 | `GRACE` | 0 / 1 | previous-epoch secret keys kept after a rotation |
 | `REKEY_ON_LEAVE` | `FALSE` / `TRUE` | s_C renewed when a member leaves |
@@ -99,15 +108,21 @@ overlay and not observed.
 
 Full design (BASE): amended layer removal, per-packet onion, node keys,
 `GRACE = 1`, no observer, no rotation, no leave, `Bad = {}`, `HISTORY`.
-The amended readings are the base because under the literal ones nothing
-is delivered, which would make every other row vacuous.
+The amended readings are the base because under the literal ones delivery
+is not almost sure (under `PEEL = "published"` nothing is delivered at
+all), which would make every other row vacuous. `SafetySpec` is `Spec`
+without fairness, for `ch_know_monotone`, which checks a safety property
+stated as an action.
 
 The resolved protocol (`am_*` rows) adds the cluster key for the ingress
 layer, `REKEY_ON_LEAVE = TRUE`, rotation and departure in flight, and the
 strongest adversary of each kind: both ingress nodes and a global observer
 (`am_safety`); an egress and the observer (`am_exposure`); a non-egress
 member of the egress cluster and the observer (`am_bridge`); and delivery
-(`am_live`). `am_tcp` is its egress counterpart. See
+(`am_live`). `am_tcp` is its egress counterpart. Their bounds: each node
+rotates at most once; one member leaves, never the packet's own ingress,
+target egress or current holder; `am_live` uses one private cluster, so
+departures together with bridges (G4) are not checked. See
 [`resolutions.md`](resolutions.md).
 
 ### Properties
@@ -116,11 +131,12 @@ member of the egress cluster and the observer (`am_bridge`); and delivery
 |---|---|---|
 | `NoPayloadBeforeEgress` | invariant | PRA: "no intermediary cluster or relay node can see the payload before it reaches the end of the secure channel" — for every node v ∉ O |
 | `PayloadNeedsEgress` | invariant | coalition form: the payload needs a compromised egress |
-| `ExposureByExit` | invariant | premise of Φ_N (CMP): once the message has left, a coalition knows the payload only if the exit node is compromised. Checked at completion: knowledge only grows and every behaviour can be extended to an exit |
-| `EgressReachable` | invariant | almost-sure delivery, graph form |
+| `ExposureByExit` | invariant | premise of Φ_N (CMP): once the message has left, a coalition knows the payload only if the exit node is compromised. Checked at completion, which loses nothing because the coalition's knowledge only grows (`KnowledgeMonotone`) |
+| `KnowledgeMonotone` | action property | the coalition's keys and received terms never shrink; `Know` is monotone, so neither does its knowledge |
+| `EgressReachable` | invariant | a target egress is reachable over the walk's graph: necessary for almost-sure delivery |
 | `Delivered` | liveness | almost-sure delivery, strong fairness on every walk transition |
-| `ForwardSecrecy` | invariant | PRA: keys are "forward secure" |
-| `PostLeave` | invariant | not claimed: a member that left cannot open layers sealed after it left |
+| `ForwardSecrecy` | invariant | PRA: keys are "forward secure" — checked for the payload against a later compromise of the exit node's KEM key; regular cluster epochs of s_C are not modelled, and public-cluster link keys are long-term |
+| `PostLeave` | invariant | not claimed: a member that left cannot open link or hop layers sealed after it left (it checks encrypted terms; an ingress layer sealed under the cluster key before the renewal is not covered) |
 
 ## `spec/GsrpEgress.tla` — egress sessions (DON)
 
@@ -129,8 +145,9 @@ One flow θ leaves a cluster of three members (a fourth may join).
 | Action | Article |
 |---|---|
 | `SendSeg` | a member sends a TCP segment: looks T_C up; if absent selects z = F_C(θ) and inserts (θ, z); z allocates a = Choose(A_z); the source is rewritten to (z, a) |
+| `LookupRel` | under `TABLE = "relation"`, the lookup (and selection) as a step of its own, before `SendSeg` inserts |
 | `Gossip` | RSDP merges replicas of T_C and of the membership view (eventually consistent; conflicting entries resolved to the smaller identifier) |
-| `Join` | membership churn |
+| `Join` | membership churn: node 4 joins (once; departures are not modelled here) |
 | `Fin` | FIN/RST: entries removed |
 | `Boundary` | epoch t → t + 1 |
 | `UdpSend` | an egress node sends a UDP packet; inserts (θ, a, d, ρ, τ_exp) into U_v if absent |
@@ -139,7 +156,7 @@ One flow θ leaves a cluster of three members (a fourth may join).
 | Constant | Values (published first) | Text it decides |
 |---|---|---|
 | `FACADE` | `"choose"` / `"hash"` | F_C(θ): any member, or a function of the local membership view (the model uses the largest identifier; any function of the view changes under some membership change) |
-| `TABLE` | `"gossip"` / `"consensus"` | how the "cluster-wide shared state" is kept |
+| `TABLE` | `"gossip"` / `"relation"` / `"consensus"` | how the "cluster-wide shared state" is kept: replicas merged by gossip; a linearisable relation with lookup and insert as separate steps; or one atomic insert-if-absent committed before the segment is sent. `"consensus"` is an atomic register, what a consensus protocol must provide, not a consensus protocol |
 | `CARRY` | `"published"` / `"amended"` | T_C(t), S(t), R(t) per epoch, or carried until FIN/RST/expiry |
 | `REFRESH` | `"published"` / `"amended"` | τ_exp fixed when the U_v entry is created, or refreshed on use |
 | `CHURN`, `EPOCHS` | booleans | a join, an epoch boundary during the session |
@@ -151,7 +168,7 @@ One flow θ leaves a cluster of three members (a fourth may join).
 | `ReturnPath` | a response to any source the session used reaches a façade that holds the session |
 | `Cleanup` | after FIN/RST every replica eventually drops θ (liveness, weak fairness on gossip) |
 | `UdpReturn` | a UDP response arriving within RTT finds its entry and return path |
-| `UdpSourceStable` | DON: dispersion "should appear seamless for the initiator and recipient" — one source per UDP flow |
+| `UdpSourceStable` | dispersion "should appear seamless for the initiator and recipient" — one source per UDP flow |
 
 Assumption, not checked: a segment sent by one member with the source
 rewritten to the façade's address is delivered (network ingress filtering

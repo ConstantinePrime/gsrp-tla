@@ -32,7 +32,11 @@ EXTENDS Integers, FiniteSets, TLC
 CONSTANTS
     MODE,     \* "tcp" / "udp"
     FACADE,   \* "hash": F_C(theta) a function of the local membership view; "choose": any member
-    TABLE,    \* "gossip": replicas merged by RSDP; "consensus": inserted through consensus
+    TABLE,    \* "gossip": replicas merged by RSDP; "consensus": insert-if-absent
+              \* committed atomically before the segment is sent (an atomic
+              \* register: what consensus must provide, not a consensus
+              \* protocol); "relation": T_C a linearisable relation, but lookup
+              \* and insert are separate steps, as DON writes them
     CHURN,    \* node 4 may join during the session
     EPOCHS,   \* an epoch boundary may fall inside the session
     CARRY,    \* "published": T_C, S, R are per epoch (reset); "amended": carried
@@ -41,7 +45,8 @@ CONSTANTS
     RTT,      \* a response arrives within RTT ticks of its packet
     MaxSeg    \* segments or packets per behaviour
 
-ASSUME /\ MODE \in {"tcp", "udp"} /\ FACADE \in {"hash", "choose"} /\ TABLE \in {"gossip", "consensus"}
+ASSUME /\ MODE \in {"tcp", "udp"} /\ FACADE \in {"hash", "choose"}
+       /\ TABLE \in {"gossip", "consensus", "relation"}
        /\ CARRY \in {"published", "amended"} /\ REFRESH \in {"published", "amended"}
        /\ TauExp \in Nat /\ RTT \in Nat \ {0} /\ MaxSeg \in Nat
 
@@ -71,12 +76,14 @@ VARIABLES
     usrc,     \* UDP source addresses the server saw
     answered, \* responses that found their entry
     lost,     \* a response found no entry
-    segs      \* segments or packets sent
+    segs,     \* segments or packets sent
+    rel,      \* TABLE = "relation": facades recorded for theta in T_C
+    pend      \* pend[v]: facade v looked up or selected, not yet used; 0 = none
 
 vars == <<live, mem, view, tomb, tg, S, sent, senders, inserts, sess, epoch,
-          uport, uage, resp, usrc, answered, lost, segs>>
+          uport, uage, resp, usrc, answered, lost, segs, rel, pend>>
 udpVars == <<uport, uage, resp, usrc, answered, lost>>
-tcpVars == <<live, mem, view, tomb, tg, S, sent, senders, inserts, sess, epoch>>
+tcpVars == <<live, mem, view, tomb, tg, S, sent, senders, inserts, sess, epoch, rel, pend>>
 
 Init ==
     /\ live = Initial
@@ -88,6 +95,7 @@ Init ==
     /\ uport = [v \in Node |-> 0] /\ uage = [v \in Node |-> 0]
     /\ resp = {} /\ usrc = {} /\ answered = 0 /\ lost = FALSE
     /\ segs = 0
+    /\ rel = {} /\ pend = [v \in Node |-> 0]
 
 (***************************************************************************)
 (* TCP                                                                     *)
@@ -95,14 +103,31 @@ Init ==
 Lookup(v) == IF TABLE = "consensus" THEN tg ELSE view[v]
 Select(v) == IF FACADE = "hash" THEN {F(mem[v])} ELSE live
 
+\* TABLE = "relation": step 1 of DON, look theta up in T_C; if absent,
+\* select a facade (inserted with the segment, step 2).
+LookupRel(v) ==
+    /\ MODE = "tcp" /\ TABLE = "relation" /\ sess = "open" /\ v \in live
+    /\ pend[v] = 0 /\ segs < MaxSeg
+    /\ \E z \in (IF rel # {} THEN rel ELSE Select(v)) : pend' = [pend EXCEPT ![v] = z]
+    /\ UNCHANGED <<live, mem, view, tomb, tg, S, sent, senders, inserts, sess, epoch, segs, rel>>
+    /\ UNCHANGED udpVars
+
 SendSeg(v) ==
     /\ MODE = "tcp" /\ sess = "open" /\ v \in live /\ segs < MaxSeg
-    /\ \E z \in (IF Lookup(v) # 0 THEN {Lookup(v)} ELSE Select(v)) :
-           /\ IF TABLE = "consensus"
-              THEN tg' = z /\ UNCHANGED <<view, inserts>>
-              ELSE /\ view' = [view EXCEPT ![v] = z]
-                   /\ inserts' = IF view[v] = 0 THEN inserts + 1 ELSE inserts
-                   /\ UNCHANGED tg
+    /\ TABLE = "relation" => pend[v] # 0
+    /\ \E z \in (IF TABLE = "relation" THEN {pend[v]}
+                 ELSE IF Lookup(v) # 0 THEN {Lookup(v)} ELSE Select(v)) :
+           /\ CASE TABLE = "consensus" ->
+                     tg' = z /\ UNCHANGED <<view, inserts, rel, pend>>
+                 [] TABLE = "relation" ->
+                     /\ rel' = rel \cup {z}
+                     /\ inserts' = IF z \notin rel THEN inserts + 1 ELSE inserts
+                     /\ pend' = [pend EXCEPT ![v] = 0]
+                     /\ UNCHANGED <<view, tg>>
+                 [] OTHER ->
+                     /\ view' = [view EXCEPT ![v] = z]
+                     /\ inserts' = IF view[v] = 0 THEN inserts + 1 ELSE inserts
+                     /\ UNCHANGED <<tg, rel, pend>>
            /\ \E p \in (IF S[z] # 0 THEN {S[z]} ELSE Ports) :
                   /\ S' = [S EXCEPT ![z] = p]
                   /\ sent' = sent \cup {<<z, p>>}
@@ -119,20 +144,22 @@ Gossip(u, v) ==
        /\ view' = [view EXCEPT ![v] = IF t THEN 0 ELSE Merge(view[v], view[u])]
     /\ mem' = [mem EXCEPT ![v] = @ \cup mem[u]]
     /\ <<view', tomb', mem'>> # <<view, tomb, mem>>
-    /\ UNCHANGED <<live, tg, S, sent, senders, inserts, sess, epoch, segs>> /\ UNCHANGED udpVars
+    /\ UNCHANGED <<live, tg, S, sent, senders, inserts, sess, epoch, segs, rel, pend>>
+    /\ UNCHANGED udpVars
 
 Join ==
     /\ MODE = "tcp" /\ CHURN /\ 4 \notin live
     /\ live' = live \cup {4}
     /\ mem' = [mem EXCEPT ![4] = live \cup {4}]
-    /\ UNCHANGED <<view, tomb, tg, S, sent, senders, inserts, sess, epoch, segs>> /\ UNCHANGED udpVars
+    /\ UNCHANGED <<view, tomb, tg, S, sent, senders, inserts, sess, epoch, segs, rel, pend>>
+    /\ UNCHANGED udpVars
 
 Fin ==
     /\ MODE = "tcp" /\ sess = "open" /\ segs > 0
     /\ sess' = "closed"
     /\ tomb' = [v \in Node |-> tomb[v] \/ S[v] # 0]     \* the facade sees FIN/RST
     /\ S' = [v \in Node |-> 0]
-    /\ tg' = 0
+    /\ tg' = 0 /\ rel' = {} /\ pend' = [v \in Node |-> 0]
     /\ view' = [v \in Node |-> IF S[v] # 0 THEN 0 ELSE view[v]]
     /\ UNCHANGED <<live, mem, sent, senders, inserts, epoch, segs>> /\ UNCHANGED udpVars
 
@@ -140,9 +167,9 @@ Boundary ==
     /\ MODE = "tcp" /\ EPOCHS /\ epoch = 0 /\ sess = "open"
     /\ epoch' = 1
     /\ IF CARRY = "published"
-       THEN /\ view' = [v \in Node |-> 0] /\ S' = [v \in Node |-> 0] /\ tg' = 0
-       ELSE UNCHANGED <<view, S, tg>>
-    /\ UNCHANGED <<live, mem, tomb, sent, senders, inserts, sess, segs>> /\ UNCHANGED udpVars
+       THEN /\ view' = [v \in Node |-> 0] /\ S' = [v \in Node |-> 0] /\ tg' = 0 /\ rel' = {}
+       ELSE UNCHANGED <<view, S, tg, rel>>
+    /\ UNCHANGED <<live, mem, tomb, sent, senders, inserts, sess, segs, pend>> /\ UNCHANGED udpVars
 
 (***************************************************************************)
 (* UDP                                                                     *)
@@ -175,7 +202,7 @@ Deliver(r) ==
     /\ UNCHANGED <<uport, uage, usrc, segs>> /\ UNCHANGED tcpVars
 
 Next ==
-    \/ \E v \in Node : SendSeg(v) \/ UdpSend(v)
+    \/ \E v \in Node : SendSeg(v) \/ UdpSend(v) \/ LookupRel(v)
     \/ \E u, v \in Node : MODE = "tcp" /\ Gossip(u, v)
     \/ Join \/ Fin \/ Boundary \/ Tick
     \/ \E r \in resp : Deliver(r)
@@ -191,6 +218,7 @@ TypeOK ==
     /\ live \subseteq Node /\ view \in [Node -> Node \cup {0}] /\ tg \in Node \cup {0}
     /\ S \in [Node -> Ports \cup {0}] /\ sess \in {"open", "closed"} /\ epoch \in 0..1
     /\ uport \in [Node -> Ports \cup {0}] /\ lost \in BOOLEAN /\ segs \in 0..MaxSeg
+    /\ rel \subseteq Node /\ pend \in [Node -> Node \cup {0}]
 
 \* DON: "a cluster must maintain a single facade node for the duration of a
 \* TCP session" -- every segment leaves with one source (z*, a*).
@@ -217,4 +245,6 @@ NoConcurrentOpen    == inserts <= 1
 NoUdpAnswer         == answered = 0
 NoJoin              == 4 \notin live
 NoBoundaryInSession == ~(epoch = 1 /\ sess = "open" /\ segs > 0)
+NoStaleAfterClose   == ~(sess = "closed" /\ \E v \in live : view[v] # 0)
+NoJoinBoundary      == ~(4 \in live /\ epoch = 1 /\ sess = "open" /\ segs > 0)
 =============================================================================

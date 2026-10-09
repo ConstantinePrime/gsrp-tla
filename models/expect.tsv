@@ -4,10 +4,11 @@ ch_live_perpacket	GsrpChannel	holds
 ch_live_kemdem	GsrpChannel	holds
 ch_pub_perpacket	GsrpChannel	holds
 ch_pub_kemdem	GsrpChannel	holds
-ch_disp_visit	GsrpChannel	violated:ExposureByExit
+ch_disp_visit	GsrpChannel	holds
 ch_disp_obs	GsrpChannel	violated:ExposureByExit
 ch_disp_perpacket	GsrpChannel	holds
 ch_priv_cluster	GsrpChannel	violated:NoPayloadBeforeEgress
+ch_priv_cluster_all	GsrpChannel	violated:ExposureByExit
 ch_priv_node	GsrpChannel	holds
 ch_priv_ingress	GsrpChannel	holds
 ch_reach_bridge	GsrpChannel	holds
@@ -23,6 +24,9 @@ am_safety	GsrpChannel	holds
 am_exposure	GsrpChannel	holds
 am_bridge	GsrpChannel	holds
 am_live	GsrpChannel	holds
+ch_know_monotone	GsrpChannel	holds
+wc_am	GsrpChannel	violated:NoRotateLeaveInFlight
+wc_am_bridge	GsrpChannel	violated:NoBadHandles
 wc_delivered	GsrpChannel	violated:NotDelivered
 wc_bridge	GsrpChannel	violated:NoBridge
 wc_bad_relays	GsrpChannel	violated:NoBadHandles
@@ -30,6 +34,7 @@ wc_rotation	GsrpChannel	violated:NoRotationInFlight
 wc_late	GsrpChannel	violated:NoLate
 wc_leave	GsrpChannel	violated:NoLeaveInFlight
 eg_choose_gossip	GsrpEgress	violated:OneFacade
+eg_relation	GsrpEgress	violated:OneFacade
 eg_hash_gossip	GsrpEgress	holds
 eg_hash_churn	GsrpEgress	violated:OneFacade
 eg_consensus	GsrpEgress	holds
@@ -46,3 +51,5 @@ we_concurrent_open	GsrpEgress	violated:NoConcurrentOpen
 we_udp_resp	GsrpEgress	violated:NoUdpAnswer
 we_join	GsrpEgress	violated:NoJoin
 we_epoch	GsrpEgress	violated:NoBoundaryInSession
+we_cleanup	GsrpEgress	violated:NoStaleAfterClose
+we_am_tcp	GsrpEgress	violated:NoJoinBoundary

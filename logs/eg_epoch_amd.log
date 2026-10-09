@@ -1,5 +1,6 @@
+inputs: c37d25841d7d903efe76e6bc3886c627420718ed778d57794421f4ec9dd4dee6 e1d2ee09cd5ec42c20d8a4d1fac76629fee8c7a08043ba110d076d9ca85fd9a3 936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88
 TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
-Running breadth-first search Model-Checking with fp 34 and seed 1977681229657133484 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 69643] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Running breadth-first search Model-Checking with fp 81 and seed 8426784707756958655 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 105255] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/GsrpEgress.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/eg_epoch_amd.tmp/Integers.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/eg_epoch_amd.tmp/FiniteSets.tla
@@ -12,9 +13,9 @@ Semantic processing of module Sequences
 Semantic processing of module FiniteSets
 Semantic processing of module TLC
 Semantic processing of module GsrpEgress
-Starting... (2026-10-09 15:34:20)
+Starting... (2026-10-09 17:05:09)
 Computing initial states...
-Finished computing initial states: 1 distinct state generated at 2026-10-09 15:34:21.
+Finished computing initial states: 1 distinct state generated at 2026-10-09 17:05:09.
 Model checking completed. No error has been found.
   Estimates of the probability that TLC did not check all reachable states
   because two distinct states had the same fingerprint:
@@ -22,4 +23,4 @@ Model checking completed. No error has been found.
 2136 states generated, 810 distinct states found, 0 states left on queue.
 The depth of the complete state graph search is 10.
 The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 7 and the 95th percentile is 3).
-Finished in 00s at (2026-10-09 15:34:21)
+Finished in 00s at (2026-10-09 17:05:09)

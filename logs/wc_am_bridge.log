@@ -1,0 +1,294 @@
+inputs: ae757ee787575bb91638050b38832656fc6fd6b91330bdee1f83a23932fcb1bd 5cb4eca33cd7edfa082eaa6c825c599d304e612730df896587cc3c758100a2b1 936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 63 and seed -7405201956816725447 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 104645] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/GsrpChannel.tla
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/wc_am_bridge.tmp/Integers.tla
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/wc_am_bridge.tmp/FiniteSets.tla
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/wc_am_bridge.tmp/Sequences.tla
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/wc_am_bridge.tmp/TLC.tla
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/wc_am_bridge.tmp/Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module GsrpChannel
+Starting... (2026-10-09 17:04:59)
+Computing initial states...
+Computed 2 initial states...
+Finished computing initial states: 4 distinct states generated at 2026-10-09 17:04:59.
+Error: Invariant NoBadHandles is violated.
+Error: The behavior up to this point is:
+State 1: <Initial predicate>
+/\ xs = 2
+/\ netAfter = {}
+/\ ys = 4
+/\ cur = [ t |-> "msg",
+  h |->
+      { [ t |-> "kem",
+          key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "in"],
+          sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 2] ] },
+  q |->
+      [ t |-> "enc",
+        key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "in"],
+        body |->
+            [ t |-> "msg",
+              h |->
+                  { [ t |-> "kem",
+                      key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
+                      sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 4] ] },
+              q |->
+                  [ t |-> "enc",
+                    key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
+                    body |-> [t |-> "m"] ] ] ] ]
+/\ leaver = 0
+/\ leaverKeys = {}
+/\ stage = "client"
+/\ pos = 0
+/\ hops = 0
+/\ ep = <<0, 0, 0, 0, 0>>
+/\ net = {}
+/\ departed = {}
+/\ ret = <<{0}, {0}, {0}, {0}, {0}>>
+/\ lateKeys = {}
+/\ cep = [C1 |-> 0, C2 |-> 0]
+/\ seen = <<{}, {}, {}, {}, {}>>
+/\ exitNode = 0
+
+State 2: <Dispatch line 211, col 5 to line 215, col 102 of module GsrpChannel>
+/\ xs = 2
+/\ netAfter = {}
+/\ ys = 4
+/\ cur = [ t |-> "msg",
+  h |->
+      { [ t |-> "kem",
+          key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "in"],
+          sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 2] ] },
+  q |->
+      [ t |-> "enc",
+        key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "in"],
+        body |->
+            [ t |-> "msg",
+              h |->
+                  { [ t |-> "kem",
+                      key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
+                      sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 4] ] },
+              q |->
+                  [ t |-> "enc",
+                    key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
+                    body |-> [t |-> "m"] ] ] ] ]
+/\ leaver = 0
+/\ leaverKeys = {}
+/\ stage = "ingress"
+/\ pos = 2
+/\ hops = 0
+/\ ep = <<0, 0, 0, 0, 0>>
+/\ net = { [ t |-> "msg",
+    h |->
+        { [ t |-> "kem",
+            key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "in"],
+            sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 2] ] },
+    q |->
+        [ t |-> "enc",
+          key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "in"],
+          body |->
+              [ t |-> "msg",
+                h |->
+                    { [ t |-> "kem",
+                        key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
+                        sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 4] ] },
+                q |->
+                    [ t |-> "enc",
+                      key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
+                      body |-> [t |-> "m"] ] ] ] ] }
+/\ departed = {}
+/\ ret = <<{0}, {0}, {0}, {0}, {0}>>
+/\ lateKeys = {}
+/\ cep = [C1 |-> 0, C2 |-> 0]
+/\ seen = << {},
+   { [ t |-> "msg",
+       h |->
+           { [ t |-> "kem",
+               key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "in"],
+               sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 2] ] },
+       q |->
+           [ t |-> "enc",
+             key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "in"],
+             body |->
+                 [ t |-> "msg",
+                   h |->
+                       { [ t |-> "kem",
+                           key |->
+                               [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
+                           sec |->
+                               [e |-> 0, t |-> "key", k |-> "sk", n |-> 4] ] },
+                   q |->
+                       [ t |-> "enc",
+                         key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
+                         body |-> [t |-> "m"] ] ] ] ] },
+   {},
+   {},
+   {} >>
+/\ exitNode = 0
+
+State 3: <Ingress line 218, col 5 to line 223, col 49 of module GsrpChannel>
+/\ xs = 2
+/\ netAfter = {}
+/\ ys = 4
+/\ cur = [ t |-> "msg",
+  h |->
+      { [ t |-> "kem",
+          key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
+          sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 4] ] },
+  q |->
+      [ t |-> "enc",
+        key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
+        body |-> [t |-> "m"] ] ]
+/\ leaver = 0
+/\ leaverKeys = {}
+/\ stage = "walk"
+/\ pos = 2
+/\ hops = 0
+/\ ep = <<0, 0, 0, 0, 0>>
+/\ net = { [ t |-> "msg",
+    h |->
+        { [ t |-> "kem",
+            key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "in"],
+            sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 2] ] },
+    q |->
+        [ t |-> "enc",
+          key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "in"],
+          body |->
+              [ t |-> "msg",
+                h |->
+                    { [ t |-> "kem",
+                        key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
+                        sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 4] ] },
+                q |->
+                    [ t |-> "enc",
+                      key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
+                      body |-> [t |-> "m"] ] ] ] ] }
+/\ departed = {}
+/\ ret = <<{0}, {0}, {0}, {0}, {0}>>
+/\ lateKeys = {}
+/\ cep = [C1 |-> 0, C2 |-> 0]
+/\ seen = << {},
+   { [ t |-> "msg",
+       h |->
+           { [ t |-> "kem",
+               key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "in"],
+               sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 2] ] },
+       q |->
+           [ t |-> "enc",
+             key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "in"],
+             body |->
+                 [ t |-> "msg",
+                   h |->
+                       { [ t |-> "kem",
+                           key |->
+                               [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
+                           sec |->
+                               [e |-> 0, t |-> "key", k |-> "sk", n |-> 4] ] },
+                   q |->
+                       [ t |-> "enc",
+                         key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
+                         body |-> [t |-> "m"] ] ] ] ] },
+   {},
+   {},
+   {} >>
+/\ exitNode = 0
+
+State 4: <Move line 226, col 5 to line 234, col 98 of module GsrpChannel>
+/\ xs = 2
+/\ netAfter = {}
+/\ ys = 4
+/\ cur = [ t |-> "msg",
+  h |->
+      { [ t |-> "kem",
+          key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
+          sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 4] ] },
+  q |->
+      [ t |-> "enc",
+        key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
+        body |-> [t |-> "m"] ] ]
+/\ leaver = 0
+/\ leaverKeys = {}
+/\ stage = "walk"
+/\ pos = 3
+/\ hops = 0
+/\ ep = <<0, 0, 0, 0, 0>>
+/\ net = { [ t |-> "enc",
+    key |-> [a |-> 2, b |-> 3, t |-> "key", k |-> "br"],
+    body |->
+        [ t |-> "msg",
+          h |->
+              { [ t |-> "kem",
+                  key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
+                  sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 4] ] },
+          q |->
+              [ t |-> "enc",
+                key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
+                body |-> [t |-> "m"] ] ] ],
+  [ t |-> "msg",
+    h |->
+        { [ t |-> "kem",
+            key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "in"],
+            sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 2] ] },
+    q |->
+        [ t |-> "enc",
+          key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "in"],
+          body |->
+              [ t |-> "msg",
+                h |->
+                    { [ t |-> "kem",
+                        key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
+                        sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 4] ] },
+                q |->
+                    [ t |-> "enc",
+                      key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
+                      body |-> [t |-> "m"] ] ] ] ] }
+/\ departed = {}
+/\ ret = <<{0}, {0}, {0}, {0}, {0}>>
+/\ lateKeys = {}
+/\ cep = [C1 |-> 0, C2 |-> 0]
+/\ seen = << {},
+   { [ t |-> "msg",
+       h |->
+           { [ t |-> "kem",
+               key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "in"],
+               sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 2] ] },
+       q |->
+           [ t |-> "enc",
+             key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "in"],
+             body |->
+                 [ t |-> "msg",
+                   h |->
+                       { [ t |-> "kem",
+                           key |->
+                               [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
+                           sec |->
+                               [e |-> 0, t |-> "key", k |-> "sk", n |-> 4] ] },
+                   q |->
+                       [ t |-> "enc",
+                         key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
+                         body |-> [t |-> "m"] ] ] ] ] },
+   { [ t |-> "enc",
+       key |-> [a |-> 2, b |-> 3, t |-> "key", k |-> "br"],
+       body |->
+           [ t |-> "msg",
+             h |->
+                 { [ t |-> "kem",
+                     key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
+                     sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 4] ] },
+             q |->
+                 [ t |-> "enc",
+                   key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
+                   body |-> [t |-> "m"] ] ] ] },
+   {},
+   {} >>
+/\ exitNode = 0
+
+193 states generated, 141 distinct states found, 103 states left on queue.
+The depth of the complete state graph search is 4.
+The average outdegree of the complete state graph is 4 (minimum is 0, the maximum 8 and the 95th percentile is 8).
+Finished in 00s at (2026-10-09 17:04:59)

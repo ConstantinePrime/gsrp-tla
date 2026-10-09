@@ -1,5 +1,6 @@
+inputs: ae757ee787575bb91638050b38832656fc6fd6b91330bdee1f83a23932fcb1bd 4481db0718c4ba3cae8fea357b2bf9667d1cccada057f42819a8be292baff9d3 936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88
 TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
-Running breadth-first search Model-Checking with fp 9 and seed 4940911146404253439 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 68893] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Running breadth-first search Model-Checking with fp 30 and seed 8985157878718786349 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 104201] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/GsrpChannel.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/am_exposure.tmp/Integers.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/am_exposure.tmp/FiniteSets.tla
@@ -12,17 +13,17 @@ Semantic processing of module Sequences
 Semantic processing of module FiniteSets
 Semantic processing of module TLC
 Semantic processing of module GsrpChannel
-Starting... (2026-10-09 15:33:00)
+Starting... (2026-10-09 17:03:26)
 Computing initial states...
 Computed 2 initial states...
-Finished computing initial states: 4 distinct states generated at 2026-10-09 15:33:01.
-Progress(10) at 2026-10-09 15:33:04: 42,845 states generated (42,845 s/min), 14,708 distinct states found (14,708 ds/min), 6,974 states left on queue.
+Finished computing initial states: 4 distinct states generated at 2026-10-09 17:03:26.
+Progress(10) at 2026-10-09 17:03:29: 42,617 states generated (42,617 s/min), 14,603 distinct states found (14,603 ds/min), 7,076 states left on queue.
 Model checking completed. No error has been found.
   Estimates of the probability that TLC did not check all reachable states
   because two distinct states had the same fingerprint:
   calculated (optimistic):  val = 2.2E-9
-  based on the actual fingerprints:  val = 3.0E-10
-451428 states generated, 128000 distinct states found, 0 states left on queue.
+  based on the actual fingerprints:  val = 2.8E-9
+447992 states generated, 126924 distinct states found, 0 states left on queue.
 The depth of the complete state graph search is 20.
 The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 9 and the 95th percentile is 4).
-Finished in 37s at (2026-10-09 15:33:38)
+Finished in 39s at (2026-10-09 17:04:05)

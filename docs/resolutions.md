@@ -21,23 +21,27 @@ Each resolution has a status:
 | | Finding | Verdict | Resolution | Rows | Status |
 |---|---|---|---|---|---|
 | G1 | No step removes the hop, link and bridge layers | Gap | a receiving node removes them; the carried message is invariant along the walk | `ch_peel_pub` / `ch_live_perpacket`, `ch_live_kemdem` | Checked |
-| G2 | One onion layer for a set of nodes | Gap | per-packet targeting: one ingress and one egress per packet | `ch_onion_literal`, `ch_disp_visit`, `ch_disp_obs` / `ch_live_perpacket`, `ch_disp_perpacket` | Checked |
-| G3 | The private-cluster key exposes the payload | Defect | the egress layer always under the egress node's key; the cluster key only for the ingress layer | `ch_priv_cluster` / `ch_priv_node`, `ch_priv_ingress`, `am_bridge` | Checked |
+| G2 | One onion layer for a set of nodes | Gap | per-packet targeting: one ingress and one egress per packet | `ch_onion_literal`, `ch_disp_obs` / `ch_live_perpacket`, `ch_disp_perpacket`, `ch_disp_visit` | Checked; anonymity cost argued |
+| G3 | The private-cluster key exposes the payload | Defect | the egress layer always under the egress node's key; the cluster key only for the ingress layer | `ch_priv_cluster`, `ch_priv_cluster_all` / `ch_priv_node`, `ch_priv_ingress`, `am_bridge` | Checked |
 | G4 | The egress may be unreachable | Gap | the egress is chosen within reach of the ingress over published bridges | `ch_reach_nobridge`, `ch_reducible` / `ch_reach_bridge` | Checked; bridge repair argued |
 | G5 | Key rotation drops messages in flight | Gap | epochs named in H; previous keys kept for one epoch | `ch_rotate_g0` / `ch_rotate_g1`; `ch_fs`, `ch_fs_window` | Checked; drop bound argued |
 | G6 | A departed member reads later link layers | Characterisation | s_C renewed on every membership change | `ch_leave_pub` / `ch_leave_rekey` | Checked for departure; join argued |
-| G7 | An eventually consistent façade table splits TCP sessions | Gap | the façade entry is committed through consensus before the first segment | `eg_choose_gossip`, `eg_hash_churn` / `eg_consensus` | Checked |
+| G7 | The façade table splits TCP sessions | Gap | the façade entry is one insert-if-absent committed through consensus before the first segment | `eg_relation`, `eg_choose_gossip`, `eg_hash_churn` / `eg_consensus` | Checked |
 | G8 | Per-epoch tables break sessions | Gap | entries carried until FIN/RST or expiry | `eg_epoch_pub` / `eg_epoch_amd` | Checked |
 | G9 | UDP entries expire under active flows | Gap | refresh on every outbound packet; τ_exp ≥ RTT | `eg_udp_pub`, `eg_udp_tight` / `eg_udp` | Checked |
-| G10 | The server sees several sources per UDP flow | Characterisation | address-bound UDP flows pinned to a façade | `eg_udp_source` | Argued |
+| G10 | The server sees several sources per UDP flow | Gap | address-bound UDP flows pinned to a façade | `eg_udp_source` | Argued (reuses the checked façade) |
 
 The resolutions are also checked together:
 
 - `am_safety`, `am_exposure` and `am_bridge` (confidentiality and the
   dispersion premise) and `am_live` (delivery) switch every channel
   resolution on. They let nodes rotate and members leave while the message
-  is in flight, under the strongest adversary of their kind.
-- `am_tcp` switches every egress resolution on.
+  is in flight, under the strongest adversary of their kind. Bounds: each
+  node rotates at most once; one member leaves, never the packet's own
+  ingress, target egress or current holder; `am_live` uses one private
+  cluster.
+- `am_tcp` switches every egress resolution on, across a join and an
+  epoch boundary.
 
 ## G1. Layer removal
 
@@ -94,32 +98,45 @@ one (`ch_onion_literal`).
 packets, not the recipients of one packet.
 
 **Alternatives.** The other completion is KEM-DEM: one content key per
-layer, encapsulated for every node of the set.
+layer, encapsulated for every node of the set, with the walk exiting at
+the first egress it reaches, as PRA's transition operator prescribes.
 
 - Both completions deliver (`ch_live_*`), and both keep the payload from
   non-egress nodes (`ch_pub_*`).
-- KEM-DEM breaks the premise of CMP's Φ_N = Σ X_i F_i, that a compromised
-  egress sees only the traffic that exits through it:
-  - a compromised egress reads every packet that passes through it
-    (`ch_disp_visit`);
-  - in a private cluster, with an observer, it also reads packets that
-    never touch it (`ch_disp_obs`).
-- Per-packet targeting keeps the premise (`ch_disp_perpacket`) and makes
-  it exact: the client chooses w_i = ε_t(i), and E[F_i] = w_i.
-- Per-packet targeting also shrinks H from |I| + |O| encapsulations to
-  two.
+- Against CMP's adversary, a set of compromised relays, both keep the
+  premise of Φ_N = Σ X_i F_i, that a compromised egress sees only the
+  traffic that exits through it (`ch_disp_perpacket`, `ch_disp_visit`).
+- With a global passive observer as well, KEM-DEM does not: in a private
+  cluster a compromised egress derives every link key from s_C, can open
+  the egress layer of any packet, and reads packets that never touch it
+  (`ch_disp_obs`). Per-packet targeting keeps the premise against the same
+  adversary (`ch_disp_perpacket`).
+- Per-packet targeting lets the client set the shares, w_i = ε_t(i), so
+  E[F_i] = w_i. Under KEM-DEM the shares are the walk's first-hitting
+  distribution over O, which the client does not control.
+- Per-packet targeting shrinks H from |I| + |O| encapsulations to two.
 
-**Cost.** The walk ends at one node instead of at the first egress it
-meets, so it is longer. By Kac's formula, the stationary walk returns to y
-after 1/π_C(y) steps on average, and to the set O after 1/π_C(O). This is
-argued, not measured.
+**Cost.**
+- The walk ends at one node instead of at the first egress it meets, so
+  it is longer. As a heuristic, the stationary walk returns to y after
+  1/π_C(y) steps on average and to the set O after 1/π_C(O) (Kac's
+  formula). The walk's real cost is the hitting time of y from the
+  ingress, which this only indicates; it is argued, not measured.
+- The ingress, and every relay that strips a link layer, sees the egress
+  header H_eg and learns which egress the packet is for. KEM-DEM's
+  multi-recipient header does not reveal it. The model has no
+  unlinkability property, so this cost is stated, not checked. A
+  key-private KEM, with the egress finding its packet by trial
+  decapsulation, would remove it.
 
 **Checked.**
 
 - `ch_onion_literal`: the published reading fails.
 - `ch_live_perpacket`: per-packet targeting delivers.
-- `ch_disp_perpacket`: the dispersion premise holds.
-- `ch_disp_visit`, `ch_disp_obs`: the premise fails under KEM-DEM.
+- `ch_disp_perpacket`: the dispersion premise holds, even with a global
+  observer in a private cluster.
+- `ch_disp_visit`: KEM-DEM keeps the premise against compromised relays.
+- `ch_disp_obs`: KEM-DEM loses it once a global observer is added.
 - `am_exposure`: the premise holds with every resolution on, while nodes
   rotate and members leave.
 
@@ -131,8 +148,10 @@ lets a client use a private cluster's public key "instead of individual
 keys". Sealing the egress layer under it lets every member of the egress
 cluster read the payload, including relays that are not egress nodes. In
 `ch_priv_cluster`, non-egress member 3 knows the payload as soon as the
-message enters the cluster. This fails under every reading in which
-members hold the cluster's secret key.
+message enters the cluster. Reading the cluster key as making every
+member an egress (O = C) avoids that, but then a compromised member reads
+messages that exit elsewhere, against CMP's dispersion premise
+(`ch_priv_cluster_all`). Either way one of the article's claims fails.
 
 **Resolution.**
 
@@ -154,6 +173,8 @@ mentions neither.
 **Checked.**
 
 - `ch_priv_cluster`: the published reading fails.
+- `ch_priv_cluster_all`: the reading O = C fails the dispersion premise
+  instead.
 - `ch_priv_node`: individual keys hold.
 - `ch_priv_ingress`: the cluster key for the ingress layer holds, with
   both ingress nodes compromised and every link observed.
@@ -180,12 +201,16 @@ necessary too.
 > bridge is re-established with another member before it is used again
 > (PRA's on-demand bridge setup).
 
+PRA does set bridge keys up on demand, but only over a link that exists,
+so the gap is about the support of Q_{i→j}, which the condition names.
+
 **Why this is the right condition.** In a finite Markov chain, the walk
 from x hits y with probability 1 iff y is reachable from every state
-reachable from x. So the condition is exactly almost-sure delivery, and
-it is what `EgressReachable` checks in every reachable state. The client
-already chooses I and O from RSDP's view, so the only cost is publishing
-the bridge map.
+reachable from x. So, over the walk's graph, the condition is exactly
+almost-sure delivery. `EgressReachable` checks this graph condition in
+every reachable state. Keys and drops are G5's concern, and the rows that
+claim delivery also check `Delivered`. The client already chooses I and O
+from RSDP's view, so the only cost is publishing the bridge map.
 
 **Checked.**
 
@@ -217,21 +242,32 @@ most once while the packet is in flight (`ch_rotate_g1`). A packet that
 outlives two rotations of that node is dropped. How often that happens
 depends on the epoch length, as follows (argued).
 
-- Inside a finite irreducible chain, y is reached from any node within r
-  steps with probability at least ε > 0, for some r and ε.
+- Under G4's condition, y is reachable from every state the walk can
+  reach. The walk's states are finite, so y is then reached from any of
+  them within r steps with probability at least ε > 0, for some r and ε.
 - Hence Pr(T > n·r) ≤ (1 − ε)^n for the hitting time T.
 - With epochs at least L steps long, a packet is dropped with probability
   at most (1 − ε)^⌊L/r⌋, which decreases exponentially in the epoch
-  length.
+  length. Two things shorten an epoch and are outside this bound: G6's
+  renewal of the cluster secret on a membership change, and a client
+  that encapsulates under a key its map has not yet updated.
 - The transport layer retransmits the rest.
 
-**Forward secrecy.** The grace period is the forward-secrecy window. A key
-of epoch t is erased when t + 2 begins. A compromise after that reveals
-nothing of traffic sealed under it (`ch_fs`, which models the state after
-the grace period ends). A compromise within the window reveals that
-traffic (`ch_fs_window`). PRA's "forward secure" therefore holds with a
-window of up to two epochs from encapsulation. The epoch length trades
-dropped packets against the width of that window.
+**Forward secrecy.** The grace period is the forward-secrecy window (shown
+for `GRACE` ∈ {0, 1}). A key of epoch t is erased when t + 2 begins. A
+compromise after that reveals nothing of traffic sealed under it (`ch_fs`,
+which models the state after the grace period ends by `GRACE = 0`). A
+compromise within the window reveals that traffic (`ch_fs_window`).
+
+This is the payload's forward secrecy against a later compromise of the
+exit node's KEM key. PRA claims forward secrecy for the hop and link keys
+derived from s_C. The model renews s_C only on departure and keeps
+public-cluster link keys long-term, so that part is argued from the same
+rule (keep s_C(t − 1) one epoch, then erase), not checked.
+
+With that scope, forward secrecy holds with a window of up to two epochs
+from encapsulation. The epoch length trades dropped packets against the
+width of that window.
 
 **Alternatives.**
 
@@ -248,8 +284,8 @@ dropped packets against the width of that window.
 - `ch_fs_window`: within the grace period — fails, measuring the window.
 - `wc_rotation`, `wc_late`: a rotation in flight and the late compromise
   do occur (witnesses).
-- `am_live`: delivery with every resolution on, while nodes rotate and
-  members leave.
+- `am_live`: delivery with every resolution on, while nodes rotate (once
+  each) and a member leaves.
 
 The bound on dropped packets is argued.
 
@@ -261,8 +297,9 @@ layers of traffic sent after it left (`ch_leave_pub`).
 
 **Resolution.**
 
-> The cluster renews s_C on every membership change, a departure or a
-> join, through its consensus, which starts a new cluster epoch.
+> The cluster renews s_C, and with it the cluster's KEM key pair, on every
+> membership change, a departure or a join, through its consensus, which
+> starts a new cluster epoch.
 
 Link and hop layers protect against non-members, and a departed member is
 one. Renewal on a join gives the symmetric property: a new member cannot
@@ -270,7 +307,11 @@ open link layers recorded before it joined. The same rule is used in
 group key agreement, where every addition or removal starts a new epoch
 [RFC 9420]. The cost is one consensus round per membership change, which
 RSDP already runs for the change itself. The payload was never at stake,
-because it is sealed under an individual key (G3).
+because it is sealed under an individual key (G3). One exposure remains:
+an ingress layer sealed under the cluster key before the renewal (G3
+allows that) can be opened by the departed member until the grace period
+ends. It reveals the egress header, not the payload, and `PostLeave`,
+which checks link and hop layers, does not cover it.
 
 **Checked.**
 
@@ -286,18 +327,21 @@ The join case is argued; the model has departures only.
 **Finding**
 ([`finding-facade-consistency.md`](finding-facade-consistency.md)). DON
 looks the façade of flow θ up in T_C(t), "the cluster-wide shared state",
-and inserts F_C(θ) if it is absent. RSDP state is eventually consistent:
+and inserts F_C(θ) if it is absent: a lookup, then an insert.
 
-- two members that look θ up before either insert reaches the other
-  select different façades (`eg_choose_gossip`);
-- a façade computed from the membership view changes under churn
+- Even with T_C linearisable, as RSDP's consensus would make it, two
+  members can both find θ absent and insert two façades (`eg_relation`).
+- With replicas merged by gossip, two members that look θ up before
+  either insert reaches the other select different façades
+  (`eg_choose_gossip`).
+- A façade computed from the membership view changes under churn
   (`eg_hash_churn`).
 
 **Resolution.**
 
-> The façade entry of a new flow, (θ, z⋆, a⋆), is committed through the
-> cluster's consensus (RSDP) before the first segment of θ leaves the
-> cluster. z⋆ allocates a⋆ ← Choose(A_{z⋆}) and the entry is proposed.
+> The façade entry of a new flow, (θ, z⋆, a⋆), is one insert-if-absent,
+> committed through the cluster's consensus (RSDP) before the first segment
+> of θ leaves the cluster. z⋆ allocates a⋆ ← Choose(A_{z⋆}) and the entry is proposed.
 > Concurrent proposals for θ are resolved by consensus, and the first
 > committed entry wins. Members rewrite every segment of θ to (z⋆, a⋆)
 > from the committed entry and never select a façade themselves.
@@ -306,14 +350,18 @@ The entry carries a⋆ because members rewrite the source port as well as
 the address (DON), while in the article S_{z⋆} is local to z⋆. The model
 abstracts this by letting every member read S.
 
-**Why consensus.** Any rule a member evaluates on its own replica fails:
+**Why one committed insert-if-absent.**
 
-- a free choice fails under concurrent opens;
-- any function of the membership view changes under some membership
-  change.
+- A lookup followed by a separate insert fails even on a linearisable
+  table.
+- Any rule a member evaluates on its own replica fails too: a free choice
+  under concurrent opens, and any function of the membership view under
+  some membership change.
 
-Every cluster already runs RSDP, so consensus is the smallest change
-within the article's design. It costs one consensus round when a TCP flow
+Every cluster already runs RSDP, so a consensus-committed insert-if-absent
+is the smallest change within the article's design. The model represents
+the commit as an atomic register written in the sending step. That shows
+what consensus must provide; it does not check a consensus protocol. It costs one consensus round when a TCP flow
 opens, added once per connection to the handshake latency.
 
 **Alternative** (argued, not checked). The client pins the façade: it
@@ -324,20 +372,26 @@ without consensus. The cost is that a⋆ travels back to the client.
 
 **Checked.**
 
+- `eg_relation`: lookup then insert on a linearisable table — fails.
 - `eg_choose_gossip`: free choice over gossip — fails.
 - `eg_hash_churn`: a function of the membership view, with churn — fails.
 - `eg_hash_gossip`: the same function without churn — holds.
-- `eg_consensus`: consensus, with free choice and churn — holds.
+- `eg_consensus`: one committed insert-if-absent, with free choice and
+  churn — holds.
 - `we_session`, `we_concurrent_open`: sessions span several senders, and
   concurrent opens occur (witnesses).
-- `am_tcp`: with G8 as well.
+- `am_tcp`: with G8 as well, across a join and an epoch boundary
+  (witness `we_am_tcp`).
 
 ## G8. Tables across epochs
 
 **Finding** ([`finding-epoch-tables.md`](finding-epoch-tables.md)). DON
 indexes T_C(t), S_{z⋆}(t) and R_{z⋆}(t) by epoch. Read as written, the
 tables of epoch t + 1 start empty, and a session that crosses the
-boundary gets a new source port (`eg_epoch_pub`).
+boundary gets a new source port (`eg_epoch_pub`). The expiry rules, which
+compare t with τ_exp, suggest that entries persist across t, so this is
+an ambiguity, and the amendment states the reading under which sessions
+work.
 
 **Resolution.**
 
@@ -354,9 +408,11 @@ boundary gets a new source port (`eg_epoch_pub`).
 ## G9. UDP entry expiry
 
 **Finding** ([`finding-udp-expiry.md`](finding-udp-expiry.md)). τ_exp is
-set when the U_v entry is created and never refreshed. A flow that lives
-longer than τ_exp loses responses (`eg_udp_pub`). With τ_exp < RTT, it
-loses them even with refresh (`eg_udp_tight`).
+set when the U_v entry is created, and no rule refreshes it, although
+DON's stated purpose, "to drop stale unused records", implies that use
+should keep an entry alive. A flow that lives longer than τ_exp can lose
+responses (`eg_udp_pub`). With τ_exp < RTT, it can lose them even with
+refresh (`eg_udp_tight`).
 
 **Resolution.**
 
@@ -377,11 +433,12 @@ minutes or more.
 
 ## G10. UDP flows bound to an address
 
-**Finding** (characterisation). Per-packet dispersion over egress nodes
-makes the server see several source addresses for one UDP flow
-(`eg_udp_source`). DON's "seamless for the initiator and recipient" holds
-only for UDP protocols that do not bind a session to the client's
-address.
+**Finding** (Gap). Per-packet dispersion over egress nodes makes the
+server see several source addresses for one UDP flow (`eg_udp_source`).
+The article requires the dispersion to "appear seamless for the initiator
+and recipient", with no "additional integration from the outside
+perspective" (DON). That holds only for UDP protocols that do not bind a
+session to the client's address.
 
 **Resolution.**
 
@@ -444,13 +501,14 @@ dissertation should state them as assumptions:
 **Keys:**
 
 8. Keep the previous epoch's KEM secret keys and s_C for one epoch (G5).
-   Renew s_C on every membership change (G6).
+   Renew s_C and the cluster's KEM key pair on every membership change
+   (G6).
 
 **Egress:**
 
-9. TCP, and UDP flows bound to an address: a committed entry
-   (θ, z⋆, a⋆) (G7, G10), carried across epochs (G8), removed on FIN/RST
-   or expiry.
+9. TCP, and UDP flows bound to an address: one committed insert-if-absent
+   of (θ, z⋆, a⋆) (G7, G10), carried across epochs (G8), removed on
+   FIN/RST or expiry.
 10. Other UDP flows: an entry per egress node, refreshed by every
     outbound packet, with τ_exp above the response delay (G9).
 
@@ -464,7 +522,12 @@ dissertation should state them as assumptions:
 - **Adversary.** Passive network adversary only, and fixed sets of
   compromised nodes, except for the late compromise of the exit node.
 - **Dynamics.** Bridges are fixed, and a façade crash ends its session
-  (no claim about it).
+  (no claim about it). Egress churn is one join. Departures together with
+  bridges are not checked.
+- **What is not modelled.** Consensus is an atomic register, not a
+  protocol (G7). Regular cluster epochs of s_C are not modelled (G5).
+  Unlinkability is not modelled, so G2's anonymity cost is stated, not
+  measured.
 
 ## For the dissertation
 
@@ -476,21 +539,24 @@ A paragraph that introduces the amendments:
 > delivers messages and keeps its confidentiality claims:
 >
 > - a step that removes the per-hop layers;
-> - per-packet choice of one ingress and one egress, which also makes the
->   per-egress traffic shares of the correlation analysis exact;
+> - per-packet choice of one ingress and one egress, which puts the
+>   per-egress traffic shares of the correlation analysis under the
+>   client's control, at the cost of telling relays the packet's egress;
 > - the egress layer sealed under the egress node's own key, since the
->   private-cluster key exposes the payload to every member of the egress
->   cluster;
+>   private-cluster key exposes the payload to the egress cluster;
 > - a choice of egress reachable from the ingress;
 > - keys kept for one epoch after rotation, which bounds the
->   forward-secrecy window;
+>   forward-secrecy window of the payload;
 > - renewal of the cluster secret on membership changes;
-> - façade selection through the cluster's consensus;
+> - façade selection as one insert-if-absent committed through the
+>   cluster's consensus;
 > - session tables carried across epochs;
-> - refresh of UDP entries on use.
+> - refresh of UDP entries on use;
+> - address-bound UDP flows pinned to a façade.
 >
-> Each amendment is checked in the model, separately and together. Without
-> each of them, the model exhibits a counterexample.
+> Each amendment but the last is checked in the model, and the channel
+> and egress amendments are also checked together. Without each checked
+> amendment, the model exhibits a counterexample.
 
 ## References
 

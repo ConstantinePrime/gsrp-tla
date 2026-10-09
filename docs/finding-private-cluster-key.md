@@ -1,7 +1,8 @@
 # Finding: the private-cluster key exposes the payload inside the egress cluster
 
-Verdict: **Defect** in PRA. Rows `ch_priv_cluster` (violated) and
-`ch_priv_node` (holds) of `spec/GsrpChannel.tla`.
+Verdict: **Defect** in PRA. Rows `ch_priv_cluster`, `ch_priv_cluster_all`
+(violated) and `ch_priv_node`, `ch_priv_ingress` (hold) of
+`spec/GsrpChannel.tla`.
 
 ## The published text
 
@@ -28,9 +29,31 @@ O = {4, 5}, bridge 2 → 3; the egress layer is sealed under C2's key
 | 4 | Move | walk | 3 | 3 removes the bridge layer and holds (H_eg, Q); H_eg's encapsulation opens with C2's key, which 3 holds |
 
 In state 4 node 3 — a relay, not an egress — knows the payload:
-`NoPayloadBeforeEgress` is violated. It fails under every reading in which
-members share the cluster's secret key; only threshold decryption among
-the egress nodes, which the article does not mention, would avoid it.
+`NoPayloadBeforeEgress` is violated. Threshold decryption among the egress
+nodes, which the article does not mention, would avoid it.
+
+## The other reading: every member is an egress
+
+One could read the cluster key as making the whole egress cluster the
+egress set, O = C2. Then no relay inside C2 is a non-egress, and
+`NoPayloadBeforeEgress` holds vacuously. What fails instead is the premise
+of CMP's dispersion analysis, that a compromised egress sees only the
+traffic that exits through it. `ch_priv_cluster_all` (scenario
+`bridge_all`, O = {3, 4, 5}, node 3 compromised; trace
+`traces/ch_priv_cluster_all.trace.txt`):
+
+| State | Action | stage | pos | Comment |
+|---|---|---|---|---|
+| 1 | Init | client | — | ingress 2, egress 4 |
+| 2 | Dispatch | ingress | 2 | |
+| 3 | Ingress | walk | 2 | |
+| 4 | Move | walk | 3 | 3 opens the egress layer with C2's key |
+| 5 | Move | walk | 4 | |
+| 6 | Exit | done | — | the message exits at 4, but 3 knows the payload |
+
+`ExposureByExit` is violated. So the cluster key breaks one of the
+article's two claims under either reading: the confidentiality claim if
+O ⊂ C, the dispersion premise if O = C.
 
 ## Proposed amendment
 

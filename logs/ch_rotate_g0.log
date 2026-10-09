@@ -1,5 +1,6 @@
+inputs: ae757ee787575bb91638050b38832656fc6fd6b91330bdee1f83a23932fcb1bd cc78be0dabd1ba9b0129547a16173782f98b7f26c86bb3418cf6933cbf40032e 936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88
 TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
-Running breadth-first search Model-Checking with fp 63 and seed -816669783945171089 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 68416] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Running breadth-first search Model-Checking with fp 7 and seed -7237246626306480410 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 103618] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/GsrpChannel.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/ch_rotate_g0.tmp/Integers.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/ch_rotate_g0.tmp/FiniteSets.tla
@@ -12,13 +13,13 @@ Semantic processing of module Sequences
 Semantic processing of module FiniteSets
 Semantic processing of module TLC
 Semantic processing of module GsrpChannel
-Starting... (2026-10-09 15:31:13)
+Starting... (2026-10-09 17:01:38)
 Implied-temporal checking--satisfiability problem has 1 branches.
 Computing initial states...
 Computed 2 initial states...
-Finished computing initial states: 4 distinct states generated at 2026-10-09 15:31:13.
-Progress(9) at 2026-10-09 15:31:13: 2,340 states generated, 512 distinct states found, 0 states left on queue.
-Checking temporal properties for the complete state space with 512 total distinct states at (2026-10-09 15:31:13)
+Finished computing initial states: 4 distinct states generated at 2026-10-09 17:01:38.
+Progress(9) at 2026-10-09 17:01:39: 2,152 states generated, 452 distinct states found, 0 states left on queue.
+Checking temporal properties for the complete state space with 452 total distinct states at (2026-10-09 17:01:39)
 Error: Temporal properties were violated.
 
 Error: The following behavior constitutes a counter-example:
@@ -59,7 +60,7 @@ State 1: <Initial predicate>
 /\ seen = <<{}, {}, {}, {}>>
 /\ exitNode = 0
 
-State 2: <Rotate line 241, col 5 to line 245, col 49 of module GsrpChannel>
+State 2: <Dispatch line 211, col 5 to line 215, col 102 of module GsrpChannel>
 /\ xs = 1
 /\ netAfter = {}
 /\ ys = 3
@@ -83,8 +84,44 @@ State 2: <Rotate line 241, col 5 to line 245, col 49 of module GsrpChannel>
                     body |-> [t |-> "m"] ] ] ] ]
 /\ leaver = 0
 /\ leaverKeys = {}
-/\ stage = "client"
-/\ pos = 0
+/\ stage = "ingress"
+/\ pos = 1
+/\ hops = 0
+/\ ep = <<0, 0, 0, 0>>
+/\ net = {}
+/\ departed = {}
+/\ ret = <<{0}, {0}, {0}, {0}>>
+/\ lateKeys = {}
+/\ cep = [C1 |-> 0]
+/\ seen = <<{}, {}, {}, {}>>
+/\ exitNode = 0
+
+State 3: <Rotate line 247, col 5 to line 251, col 49 of module GsrpChannel>
+/\ xs = 1
+/\ netAfter = {}
+/\ ys = 3
+/\ cur = [ t |-> "msg",
+  h |->
+      { [ t |-> "kem",
+          key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "in"],
+          sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 1] ] },
+  q |->
+      [ t |-> "enc",
+        key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "in"],
+        body |->
+            [ t |-> "msg",
+              h |->
+                  { [ t |-> "kem",
+                      key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
+                      sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 3] ] },
+              q |->
+                  [ t |-> "enc",
+                    key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
+                    body |-> [t |-> "m"] ] ] ] ]
+/\ leaver = 0
+/\ leaverKeys = {}
+/\ stage = "ingress"
+/\ pos = 1
 /\ hops = 0
 /\ ep = <<0, 1, 0, 0>>
 /\ net = {}
@@ -95,7 +132,7 @@ State 2: <Rotate line 241, col 5 to line 245, col 49 of module GsrpChannel>
 /\ seen = <<{}, {}, {}, {}>>
 /\ exitNode = 0
 
-State 3: <Rotate line 241, col 5 to line 245, col 49 of module GsrpChannel>
+State 4: <Rotate line 247, col 5 to line 251, col 49 of module GsrpChannel>
 /\ xs = 1
 /\ netAfter = {}
 /\ ys = 3
@@ -119,19 +156,19 @@ State 3: <Rotate line 241, col 5 to line 245, col 49 of module GsrpChannel>
                     body |-> [t |-> "m"] ] ] ] ]
 /\ leaver = 0
 /\ leaverKeys = {}
-/\ stage = "client"
-/\ pos = 0
+/\ stage = "ingress"
+/\ pos = 1
 /\ hops = 0
-/\ ep = <<0, 1, 1, 0>>
+/\ ep = <<0, 1, 0, 1>>
 /\ net = {}
 /\ departed = {}
-/\ ret = <<{0}, {1}, {1}, {0}>>
+/\ ret = <<{0}, {1}, {0}, {1}>>
 /\ lateKeys = {}
 /\ cep = [C1 |-> 0]
 /\ seen = <<{}, {}, {}, {}>>
 /\ exitNode = 0
 
-State 4: <Rotate line 241, col 5 to line 245, col 49 of module GsrpChannel>
+State 5: <Rotate line 247, col 5 to line 251, col 49 of module GsrpChannel>
 /\ xs = 1
 /\ netAfter = {}
 /\ ys = 3
@@ -155,55 +192,19 @@ State 4: <Rotate line 241, col 5 to line 245, col 49 of module GsrpChannel>
                     body |-> [t |-> "m"] ] ] ] ]
 /\ leaver = 0
 /\ leaverKeys = {}
-/\ stage = "client"
-/\ pos = 0
+/\ stage = "ingress"
+/\ pos = 1
 /\ hops = 0
-/\ ep = <<1, 1, 1, 0>>
+/\ ep = <<0, 1, 1, 1>>
 /\ net = {}
 /\ departed = {}
-/\ ret = <<{1}, {1}, {1}, {0}>>
+/\ ret = <<{0}, {1}, {1}, {1}>>
 /\ lateKeys = {}
 /\ cep = [C1 |-> 0]
 /\ seen = <<{}, {}, {}, {}>>
 /\ exitNode = 0
 
-State 5: <Rotate line 241, col 5 to line 245, col 49 of module GsrpChannel>
-/\ xs = 1
-/\ netAfter = {}
-/\ ys = 3
-/\ cur = [ t |-> "msg",
-  h |->
-      { [ t |-> "kem",
-          key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "in"],
-          sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 1] ] },
-  q |->
-      [ t |-> "enc",
-        key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "in"],
-        body |->
-            [ t |-> "msg",
-              h |->
-                  { [ t |-> "kem",
-                      key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
-                      sec |-> [e |-> 0, t |-> "key", k |-> "sk", n |-> 3] ] },
-              q |->
-                  [ t |-> "enc",
-                    key |-> [t |-> "key", k |-> "ck", n |-> 0, l |-> "eg"],
-                    body |-> [t |-> "m"] ] ] ] ]
-/\ leaver = 0
-/\ leaverKeys = {}
-/\ stage = "client"
-/\ pos = 0
-/\ hops = 0
-/\ ep = <<1, 1, 1, 1>>
-/\ net = {}
-/\ departed = {}
-/\ ret = <<{1}, {1}, {1}, {1}>>
-/\ lateKeys = {}
-/\ cep = [C1 |-> 0]
-/\ seen = <<{}, {}, {}, {}>>
-/\ exitNode = 0
-
-State 6: <Dispatch line 207, col 5 to line 211, col 102 of module GsrpChannel>
+State 6: <Rotate line 247, col 5 to line 251, col 49 of module GsrpChannel>
 /\ xs = 1
 /\ netAfter = {}
 /\ ys = 3
@@ -239,7 +240,7 @@ State 6: <Dispatch line 207, col 5 to line 211, col 102 of module GsrpChannel>
 /\ seen = <<{}, {}, {}, {}>>
 /\ exitNode = 0
 
-State 7: <Ingress line 214, col 5 to line 219, col 49 of module GsrpChannel>
+State 7: <Ingress line 218, col 5 to line 223, col 49 of module GsrpChannel>
 /\ xs = 1
 /\ netAfter = {}
 /\ ys = 3
@@ -276,6 +277,6 @@ State 7: <Ingress line 214, col 5 to line 219, col 49 of module GsrpChannel>
 /\ exitNode = 0
 
 State 8: Stuttering
-Finished checking temporal properties in 00s at 2026-10-09 15:31:13
-2340 states generated, 512 distinct states found, 0 states left on queue.
-Finished in 00s at (2026-10-09 15:31:13)
+Finished checking temporal properties in 00s at 2026-10-09 17:01:39
+2152 states generated, 452 distinct states found, 0 states left on queue.
+Finished in 00s at (2026-10-09 17:01:39)

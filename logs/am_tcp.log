@@ -1,5 +1,6 @@
+inputs: c37d25841d7d903efe76e6bc3886c627420718ed778d57794421f4ec9dd4dee6 8b367969d30ad560857164cc17256fdb22129810961e7312da6cd0e95df327bc 936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88
 TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
-Running breadth-first search Model-Checking with fp 37 and seed 4743446544547219232 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 69918] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Running breadth-first search Model-Checking with fp 101 and seed 8093566199166223104 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 105565] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/GsrpEgress.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/am_tcp.tmp/Integers.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/am_tcp.tmp/FiniteSets.tla
@@ -12,15 +13,15 @@ Semantic processing of module Sequences
 Semantic processing of module FiniteSets
 Semantic processing of module TLC
 Semantic processing of module GsrpEgress
-Starting... (2026-10-09 15:34:26)
+Starting... (2026-10-09 17:05:14)
 Computing initial states...
-Finished computing initial states: 1 distinct state generated at 2026-10-09 15:34:26.
+Finished computing initial states: 1 distinct state generated at 2026-10-09 17:05:14.
 Model checking completed. No error has been found.
   Estimates of the probability that TLC did not check all reachable states
   because two distinct states had the same fingerprint:
   calculated (optimistic):  val = 2.0E-10
-  based on the actual fingerprints:  val = 7.8E-12
+  based on the actual fingerprints:  val = 1.0E-11
 154308 states generated, 29090 distinct states found, 0 states left on queue.
 The depth of the complete state graph search is 11.
 The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 20 and the 95th percentile is 3).
-Finished in 01s at (2026-10-09 15:34:27)
+Finished in 01s at (2026-10-09 17:05:16)

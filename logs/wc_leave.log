@@ -1,5 +1,6 @@
+inputs: ae757ee787575bb91638050b38832656fc6fd6b91330bdee1f83a23932fcb1bd dc735cce1601d2e742e3f84710f2cc410367d9c156de070aa5a0ef8f760c45e7 936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88
 TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
-Running breadth-first search Model-Checking with fp 41 and seed 5043052497374873540 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 69375] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Running breadth-first search Model-Checking with fp 112 and seed 8882862250803892023 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 104923] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/GsrpChannel.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/wc_leave.tmp/Integers.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/wc_leave.tmp/FiniteSets.tla
@@ -12,10 +13,10 @@ Semantic processing of module Sequences
 Semantic processing of module FiniteSets
 Semantic processing of module TLC
 Semantic processing of module GsrpChannel
-Starting... (2026-10-09 15:34:15)
+Starting... (2026-10-09 17:05:03)
 Computing initial states...
 Computed 2 initial states...
-Finished computing initial states: 4 distinct states generated at 2026-10-09 15:34:16.
+Finished computing initial states: 4 distinct states generated at 2026-10-09 17:05:03.
 Error: Invariant NoLeaveInFlight is violated.
 Error: The behavior up to this point is:
 State 1: <Initial predicate>
@@ -54,7 +55,7 @@ State 1: <Initial predicate>
 /\ seen = <<{}, {}, {}, {}>>
 /\ exitNode = 0
 
-State 2: <Leave line 248, col 5 to line 252, col 100 of module GsrpChannel>
+State 2: <Leave line 254, col 5 to line 258, col 100 of module GsrpChannel>
 /\ xs = 1
 /\ netAfter = {}
 /\ ys = 3
@@ -92,7 +93,7 @@ State 2: <Leave line 248, col 5 to line 252, col 100 of module GsrpChannel>
 /\ seen = <<{}, {}, {}, {}>>
 /\ exitNode = 0
 
-State 3: <Dispatch line 207, col 5 to line 211, col 102 of module GsrpChannel>
+State 3: <Dispatch line 211, col 5 to line 215, col 102 of module GsrpChannel>
 /\ xs = 1
 /\ netAfter = { [ t |-> "msg",
     h |->
@@ -189,4 +190,4 @@ State 3: <Dispatch line 207, col 5 to line 211, col 102 of module GsrpChannel>
 20 states generated, 20 distinct states found, 13 states left on queue.
 The depth of the complete state graph search is 3.
 The average outdegree of the complete state graph is 3 (minimum is 3, the maximum 3 and the 95th percentile is 3).
-Finished in 00s at (2026-10-09 15:34:16)
+Finished in 00s at (2026-10-09 17:05:03)

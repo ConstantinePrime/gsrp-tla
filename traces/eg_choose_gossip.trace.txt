@@ -6,9 +6,11 @@ State 1: <Initial predicate>
 /\ segs = 0
 /\ S = <<0, 0, 0, 0>>
 /\ inserts = 0
+/\ pend = <<0, 0, 0, 0>>
 /\ resp = {}
 /\ view = <<0, 0, 0, 0>>
 /\ tomb = <<FALSE, FALSE, FALSE, FALSE>>
+/\ rel = {}
 /\ uage = <<0, 0, 0, 0>>
 /\ tg = 0
 /\ usrc = {}
@@ -20,15 +22,17 @@ State 1: <Initial predicate>
 /\ live = {1, 2, 3}
 /\ mem = <<{1, 2, 3}, {1, 2, 3}, {1, 2, 3}, {}>>
 
-State 2: <SendSeg line 99, col 5 to line 111, col 70 of module GsrpEgress>
+State 2: <SendSeg line 116, col 5 to line 136, col 70 of module GsrpEgress>
 /\ epoch = 0
 /\ sess = "open"
 /\ segs = 1
 /\ S = <<1, 0, 0, 0>>
 /\ inserts = 1
+/\ pend = <<0, 0, 0, 0>>
 /\ resp = {}
 /\ view = <<1, 0, 0, 0>>
 /\ tomb = <<FALSE, FALSE, FALSE, FALSE>>
+/\ rel = {}
 /\ uage = <<0, 0, 0, 0>>
 /\ tg = 0
 /\ usrc = {}
@@ -40,15 +44,17 @@ State 2: <SendSeg line 99, col 5 to line 111, col 70 of module GsrpEgress>
 /\ live = {1, 2, 3}
 /\ mem = <<{1, 2, 3}, {1, 2, 3}, {1, 2, 3}, {}>>
 
-State 3: <SendSeg line 99, col 5 to line 111, col 70 of module GsrpEgress>
+State 3: <SendSeg line 116, col 5 to line 136, col 70 of module GsrpEgress>
 /\ epoch = 0
 /\ sess = "open"
 /\ segs = 2
 /\ S = <<1, 1, 0, 0>>
 /\ inserts = 2
+/\ pend = <<0, 0, 0, 0>>
 /\ resp = {}
 /\ view = <<1, 2, 0, 0>>
 /\ tomb = <<FALSE, FALSE, FALSE, FALSE>>
+/\ rel = {}
 /\ uage = <<0, 0, 0, 0>>
 /\ tg = 0
 /\ usrc = {}

@@ -1,10 +1,9 @@
 # Finding: one onion layer for a set of ingress or egress nodes
 
-Verdict: **Gap** in PRA, with two completions that differ on the
-dispersion premise of CMP. Rows `ch_onion_literal` (violated);
-`ch_live_perpacket`, `ch_live_kemdem`, `ch_pub_perpacket`, `ch_pub_kemdem`
-(hold); `ch_disp_perpacket` (holds), `ch_disp_visit`, `ch_disp_obs`
-(violated) of `spec/GsrpChannel.tla`.
+Verdict: **Gap** in PRA, with two completions. Rows `ch_onion_literal`
+(violated); `ch_live_perpacket`, `ch_live_kemdem`, `ch_pub_perpacket`,
+`ch_pub_kemdem`, `ch_disp_perpacket`, `ch_disp_visit` (hold);
+`ch_disp_obs` (violated) of `spec/GsrpChannel.tla`.
 
 ## The published text
 
@@ -31,8 +30,10 @@ PRA prescribes for the ingress. Trace `traces/ch_onion_literal.trace.txt`:
 | 2 | Dispatch | ingress | 2 | ι_t picks node 2 |
 | 3 | Ingress | dropped | 2 | 2 decapsulates its own key, which does not open the layer |
 
-`Delivered` is violated; the same happens at the egress when the walk
-reaches the other egress first.
+`Delivered` is violated: a message is delivered only when dispatch and
+the walk happen to reach the node the layer was sealed for, so delivery is
+not almost sure. The same happens at the egress when the walk reaches the
+other egress first.
 
 ## Two completions
 
@@ -41,27 +42,43 @@ reaches the other egress first.
   to that ingress and the walk continues until that egress. Dispersion over
   O comes from choosing per packet.
 - **KEM-DEM** (`ONION = "kem_dem"`): one content key per layer, encapsulated
-  for every node of the set; any of them opens the layer.
+  for every node of the set; any of them opens the layer. Following PRA's
+  transition operator, which sends a message at any u ∈ O to Srv, the walk
+  exits at the first egress it reaches.
 
 Both deliver every message (`ch_live_perpacket`, `ch_live_kemdem`) and keep
 the payload from every non-egress node, even with both ingress nodes
 compromised and a global observer (`ch_pub_perpacket`, `ch_pub_kemdem`).
 
-## They differ on the dispersion premise
+## How they compare on the dispersion premise
 
 CMP models the adversary's view as Φ_N = Σ X_i F_i: a compromised egress i
 sees the share F_i of traffic that exits through it. `ExposureByExit`
 checks that premise.
 
-- Per-packet targeting keeps it, even in a private cluster with a
-  compromised egress and a global observer (`ch_disp_perpacket`, holds).
-- KEM-DEM breaks it in two ways. A compromised egress reads a message that
-  only passes through it (`ch_disp_visit`: 1 → 3 → 4, exit at 4, node 3
-  compromised). In a private cluster, a compromised egress that derives the
-  link keys from s_C and is helped by an observer reads messages that never
+- **Against CMP's adversary, a set B of compromised relays, both keep
+  it.** Per-packet targeting holds (`ch_disp_perpacket`), and so does
+  KEM-DEM (`ch_disp_visit`): a compromised egress sees a message only
+  when the walk reaches it, and then the message exits there.
+- **With a global passive observer as well, only per-packet targeting
+  keeps it.** In a private cluster, a compromised egress derives every
+  link key from s_C. Under KEM-DEM it can open the egress layer of any
+  packet it observes, so with the observer it reads messages that never
   touch it (`ch_disp_obs`: 1 → 4, exit at 4, node 3 compromised). Under
-  KEM-DEM a single compromised egress sees close to all of the flow, not
-  its share F_i.
+  per-packet targeting the egress layer is sealed for the targeted egress
+  alone (`ch_disp_perpacket` holds against the same adversary).
+- **Who sets F_i.** Under per-packet targeting the client sets the shares
+  directly: w_i = ε_t(i). Under KEM-DEM they are the walk's first-hitting
+  distribution over O, which the client does not choose.
+
+## The cost of per-packet targeting
+
+The ingress and every relay that strips a link layer see the egress
+header H_eg, so they learn which egress the packet is for. The
+multi-recipient header of KEM-DEM does not reveal that. The model has no
+unlinkability property, so this cost is stated, not checked. A key-private
+KEM, where the egress finds its packet by trial decapsulation with no
+explicit target in H_eg, would remove it.
 
 ## Proposed amendment
 
@@ -69,8 +86,10 @@ checks that premise.
 > ingress and one egress, chosen per packet from I and O; the walk carries
 > the packet to that egress.
 
-This completes PRA consistently with the analysis in CMP. KEM-DEM is an
-alternative only if CMP's per-egress share model is restated for it.
+This completes PRA consistently with the analysis in CMP, and makes the
+shares w_i the client's choice. KEM-DEM is the alternative if the
+egress's identity must be hidden from relays and no global observer is in
+the threat model.
 
 The amendment in the context of the resolved protocol — rationale,
 alternatives, cost and the rows that check it with every other

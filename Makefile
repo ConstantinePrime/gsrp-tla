@@ -4,7 +4,9 @@ TLA2TOOLS_SHA256 = 936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050
 JAVA_OPTS = -XX:+UseParallelGC -Xmx8g
 # One worker keeps breadth-first search exact: shortest counterexamples and
 # true depths, so the numbers in docs/results.md reproduce. Override with
-# WORKERS=auto for speed; verdicts and distinct-state counts do not change.
+# WORKERS=auto for speed: verdicts do not change, nor do the state counts of
+# rows that hold; a violated row stops wherever a worker first meets the
+# violation, so its count and trace may differ.
 WORKERS = 1
 
 include models/rows.mk
@@ -32,12 +34,15 @@ $(TLA2TOOLS):
 # going, and tools/check.py compares the verdict with the expected one.
 # TLC unpacks its standard modules into java.io.tmpdir; a directory per row
 # keeps parallel rows (make -j) from reading each other's half-written copy.
+# The log's first line records the SHA-256 of the module, the configuration
+# and the jar, so tools/check.py can tell a stale log from a fresh one.
 $(ROWS): %: $(TLA2TOOLS)
 	@echo "$(TLA2TOOLS_SHA256)  $(TLA2TOOLS)" | sha256sum -c --quiet -
 	@mkdir -p logs spec/states/$*.tmp; mod=$($*_MODULE); \
 	cp models/$*.cfg spec/$*.cfg; \
-	cd spec && java $(JAVA_OPTS) -Djava.io.tmpdir=states/$*.tmp -cp ../$(TLA2TOOLS) tlc2.TLC \
-	    -workers $(WORKERS) -metadir states/$* -config $*.cfg $$mod.tla | tee ../logs/$*.log; \
+	cd spec && { echo "inputs: $$(sha256sum $$mod.tla $*.cfg ../$(TLA2TOOLS) | cut -d' ' -f1 | paste -sd' ' -)"; \
+	    java $(JAVA_OPTS) -Djava.io.tmpdir=states/$*.tmp -cp ../$(TLA2TOOLS) tlc2.TLC \
+	    -workers $(WORKERS) -metadir states/$* -config $*.cfg $$mod.tla; } | tee ../logs/$*.log; \
 	rm -f $*.cfg; rm -rf states/$* states/$*.tmp
 
 clean:

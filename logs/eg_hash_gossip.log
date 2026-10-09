@@ -1,5 +1,6 @@
+inputs: c37d25841d7d903efe76e6bc3886c627420718ed778d57794421f4ec9dd4dee6 8bbe53c07501481ce754f3d020684dfe5226de48f5e31ff78768bb36ba3b2a87 936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88
 TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
-Running breadth-first search Model-Checking with fp 42 and seed -7144449301358971327 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 69457] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Running breadth-first search Model-Checking with fp 117 and seed -1566129013818374764 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 105058] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/GsrpEgress.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/eg_hash_gossip.tmp/Integers.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/eg_hash_gossip.tmp/FiniteSets.tla
@@ -12,9 +13,9 @@ Semantic processing of module Sequences
 Semantic processing of module FiniteSets
 Semantic processing of module TLC
 Semantic processing of module GsrpEgress
-Starting... (2026-10-09 15:34:17)
+Starting... (2026-10-09 17:05:06)
 Computing initial states...
-Finished computing initial states: 1 distinct state generated at 2026-10-09 15:34:17.
+Finished computing initial states: 1 distinct state generated at 2026-10-09 17:05:06.
 Model checking completed. No error has been found.
   Estimates of the probability that TLC did not check all reachable states
   because two distinct states had the same fingerprint:
@@ -22,4 +23,4 @@ Model checking completed. No error has been found.
 1005 states generated, 405 distinct states found, 0 states left on queue.
 The depth of the complete state graph search is 9.
 The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 6 and the 95th percentile is 3).
-Finished in 00s at (2026-10-09 15:34:17)
+Finished in 00s at (2026-10-09 17:05:06)
