@@ -1,0 +1,26 @@
+TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
+Running breadth-first search Model-Checking with fp 61 and seed 4678939203471865162 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 64524] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/GsrpChannel.tla
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/ch_pub_kemdem.tmp/Integers.tla
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/ch_pub_kemdem.tmp/FiniteSets.tla
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/ch_pub_kemdem.tmp/Sequences.tla
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/ch_pub_kemdem.tmp/TLC.tla
+Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/ch_pub_kemdem.tmp/Naturals.tla
+Semantic processing of module Naturals
+Semantic processing of module Integers
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module GsrpChannel
+Starting... (2026-10-09 15:25:54)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-10-09 15:25:55.
+Progress(15) at 2026-10-09 15:25:58: 55,967 states generated (55,967 s/min), 14,485 distinct states found (14,485 ds/min), 3,220 states left on queue.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 8.5E-11
+94901 states generated, 21171 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 23.
+The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 4 and the 95th percentile is 3).
+Finished in 05s at (2026-10-09 15:25:59)
