@@ -1,0 +1,17 @@
+# TLC working files
+spec/states/
+states/
+*.st
+*.fp
+*_TTrace_*
+*.out
+# per-row cfg copies made by make and run.sh
+spec/*.cfg
+# fetched tool (pinned by checksum in the Makefile)
+tla2tools.jar
+# editor / OS / Python noise
+.vscode/
+.idea/
+*.swp
+.DS_Store
+__pycache__/
