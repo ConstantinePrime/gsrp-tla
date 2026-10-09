@@ -1,5 +1,5 @@
 TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
-Running breadth-first search Model-Checking with fp 129 and seed 8796184379626109216 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 65999] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Running breadth-first search Model-Checking with fp 107 and seed 3915743419007919210 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 69331] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/GsrpChannel.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/wc_late.tmp/Integers.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/wc_late.tmp/FiniteSets.tla
@@ -12,10 +12,10 @@ Semantic processing of module Sequences
 Semantic processing of module FiniteSets
 Semantic processing of module TLC
 Semantic processing of module GsrpChannel
-Starting... (2026-10-09 15:29:11)
+Starting... (2026-10-09 15:34:15)
 Computing initial states...
 Computed 2 initial states...
-Finished computing initial states: 4 distinct states generated at 2026-10-09 15:29:11.
+Finished computing initial states: 4 distinct states generated at 2026-10-09 15:34:15.
 Error: Invariant NoLate is violated.
 Error: The behavior up to this point is:
 State 1: <Initial predicate>
@@ -533,4 +533,4 @@ State 7: <LateCompromise line 255, col 5 to line 258, col 51 of module GsrpChann
 1661 states generated, 618 distinct states found, 317 states left on queue.
 The depth of the complete state graph search is 7.
 The average outdegree of the complete state graph is 2 (minimum is 0, the maximum 7 and the 95th percentile is 7).
-Finished in 00s at (2026-10-09 15:29:11)
+Finished in 00s at (2026-10-09 15:34:15)

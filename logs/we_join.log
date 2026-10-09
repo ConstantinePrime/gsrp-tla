@@ -1,5 +1,5 @@
 TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
-Running breadth-first search Model-Checking with fp 39 and seed 2410615662076488940 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 66972] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Running breadth-first search Model-Checking with fp 81 and seed -979883066203669169 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 70105] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/GsrpEgress.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/we_join.tmp/Integers.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/we_join.tmp/FiniteSets.tla
@@ -12,9 +12,9 @@ Semantic processing of module Sequences
 Semantic processing of module FiniteSets
 Semantic processing of module TLC
 Semantic processing of module GsrpEgress
-Starting... (2026-10-09 15:29:55)
+Starting... (2026-10-09 15:34:30)
 Computing initial states...
-Finished computing initial states: 1 distinct state generated at 2026-10-09 15:29:55.
+Finished computing initial states: 1 distinct state generated at 2026-10-09 15:34:30.
 Error: Invariant NoJoin is violated.
 Error: The behavior up to this point is:
 State 1: <Initial predicate>
@@ -59,4 +59,4 @@ State 2: <Join line 125, col 5 to line 128, col 102 of module GsrpEgress>
 
 8 states generated, 8 distinct states found, 6 states left on queue.
 The depth of the complete state graph search is 2.
-Finished in 00s at (2026-10-09 15:29:55)
+Finished in 00s at (2026-10-09 15:34:30)

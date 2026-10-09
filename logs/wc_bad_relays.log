@@ -1,5 +1,5 @@
 TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
-Running breadth-first search Model-Checking with fp 90 and seed 3035536798251006732 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 65917] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Running breadth-first search Model-Checking with fp 117 and seed 6419019343974232323 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 69249] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/GsrpChannel.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/wc_bad_relays.tmp/Integers.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/wc_bad_relays.tmp/FiniteSets.tla
@@ -12,10 +12,10 @@ Semantic processing of module Sequences
 Semantic processing of module FiniteSets
 Semantic processing of module TLC
 Semantic processing of module GsrpChannel
-Starting... (2026-10-09 15:29:09)
+Starting... (2026-10-09 15:34:13)
 Computing initial states...
 Computed 2 initial states...
-Finished computing initial states: 4 distinct states generated at 2026-10-09 15:29:09.
+Finished computing initial states: 4 distinct states generated at 2026-10-09 15:34:13.
 Error: Invariant NoBadHandles is violated.
 Error: The behavior up to this point is:
 State 1: <Initial predicate>
@@ -131,4 +131,4 @@ State 2: <Dispatch line 207, col 5 to line 211, col 102 of module GsrpChannel>
 
 5 states generated, 5 distinct states found, 3 states left on queue.
 The depth of the complete state graph search is 2.
-Finished in 00s at (2026-10-09 15:29:09)
+Finished in 00s at (2026-10-09 15:34:13)

@@ -1,5 +1,5 @@
 TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
-Running breadth-first search Model-Checking with fp 5 and seed 6269969850577688532 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 64970] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Running breadth-first search Model-Checking with fp 8 and seed -5623713778829083345 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 68334] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/GsrpChannel.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/ch_reach_nobridge.tmp/Integers.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/ch_reach_nobridge.tmp/FiniteSets.tla
@@ -12,10 +12,10 @@ Semantic processing of module Sequences
 Semantic processing of module FiniteSets
 Semantic processing of module TLC
 Semantic processing of module GsrpChannel
-Starting... (2026-10-09 15:26:07)
+Starting... (2026-10-09 15:31:11)
 Computing initial states...
 Computed 2 initial states...
-Finished computing initial states: 4 distinct states generated at 2026-10-09 15:26:07.
+Finished computing initial states: 4 distinct states generated at 2026-10-09 15:31:11.
 Error: Invariant EgressReachable is violated.
 Error: The behavior up to this point is:
 State 1: <Initial predicate>
@@ -200,4 +200,4 @@ State 3: <Ingress line 214, col 5 to line 219, col 49 of module GsrpChannel>
 9 states generated, 9 distinct states found, 3 states left on queue.
 The depth of the complete state graph search is 3.
 The average outdegree of the complete state graph is 1 (minimum is 1, the maximum 1 and the 95th percentile is 1).
-Finished in 00s at (2026-10-09 15:26:07)
+Finished in 00s at (2026-10-09 15:31:11)

@@ -1,5 +1,5 @@
 TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
-Running breadth-first search Model-Checking with fp 15 and seed 5804176267431298093 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 65835] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Running breadth-first search Model-Checking with fp 83 and seed -909784205027086677 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 69167] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/GsrpChannel.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/wc_delivered.tmp/Integers.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/wc_delivered.tmp/FiniteSets.tla
@@ -12,10 +12,10 @@ Semantic processing of module Sequences
 Semantic processing of module FiniteSets
 Semantic processing of module TLC
 Semantic processing of module GsrpChannel
-Starting... (2026-10-09 15:29:08)
+Starting... (2026-10-09 15:34:12)
 Computing initial states...
 Computed 2 initial states...
-Finished computing initial states: 4 distinct states generated at 2026-10-09 15:29:08.
+Finished computing initial states: 4 distinct states generated at 2026-10-09 15:34:12.
 Error: Invariant NotDelivered is violated.
 Error: The behavior up to this point is:
 State 1: <Initial predicate>
@@ -166,4 +166,4 @@ State 5: <Exit line 233, col 5 to line 238, col 39 of module GsrpChannel>
 43 states generated, 25 distinct states found, 10 states left on queue.
 The depth of the complete state graph search is 5.
 The average outdegree of the complete state graph is 2 (minimum is 0, the maximum 3 and the 95th percentile is 3).
-Finished in 00s at (2026-10-09 15:29:08)
+Finished in 00s at (2026-10-09 15:34:12)

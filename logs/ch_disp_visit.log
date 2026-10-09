@@ -1,5 +1,5 @@
 TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
-Running breadth-first search Model-Checking with fp 120 and seed -8696855277630308302 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 64584] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Running breadth-first search Model-Checking with fp 71 and seed 7299344965361963499 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 68006] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/GsrpChannel.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/ch_disp_visit.tmp/Integers.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/ch_disp_visit.tmp/FiniteSets.tla
@@ -12,9 +12,9 @@ Semantic processing of module Sequences
 Semantic processing of module FiniteSets
 Semantic processing of module TLC
 Semantic processing of module GsrpChannel
-Starting... (2026-10-09 15:26:00)
+Starting... (2026-10-09 15:31:05)
 Computing initial states...
-Finished computing initial states: 1 distinct state generated at 2026-10-09 15:26:00.
+Finished computing initial states: 1 distinct state generated at 2026-10-09 15:31:05.
 Error: Invariant ExposureByExit is violated.
 Error: The behavior up to this point is:
 State 1: <Initial predicate>
@@ -623,4 +623,4 @@ State 6: <Exit line 233, col 5 to line 238, col 39 of module GsrpChannel>
 99 states generated, 54 distinct states found, 36 states left on queue.
 The depth of the complete state graph search is 6.
 The average outdegree of the complete state graph is 3 (minimum is 1, the maximum 4 and the 95th percentile is 4).
-Finished in 00s at (2026-10-09 15:26:00)
+Finished in 00s at (2026-10-09 15:31:05)

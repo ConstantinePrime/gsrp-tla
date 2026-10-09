@@ -1,5 +1,5 @@
 TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
-Running breadth-first search Model-Checking with fp 28 and seed -3015699379263357528 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 66747] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Running breadth-first search Model-Checking with fp 38 and seed -8887084364411081343 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 69877] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/GsrpEgress.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/eg_udp_source.tmp/Integers.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/eg_udp_source.tmp/FiniteSets.tla
@@ -12,9 +12,9 @@ Semantic processing of module Sequences
 Semantic processing of module FiniteSets
 Semantic processing of module TLC
 Semantic processing of module GsrpEgress
-Starting... (2026-10-09 15:29:50)
+Starting... (2026-10-09 15:34:25)
 Computing initial states...
-Finished computing initial states: 1 distinct state generated at 2026-10-09 15:29:50.
+Finished computing initial states: 1 distinct state generated at 2026-10-09 15:34:25.
 Error: Invariant UdpSourceStable is violated.
 Error: The behavior up to this point is:
 State 1: <Initial predicate>
@@ -80,4 +80,4 @@ State 3: <UdpSend line 151, col 5 to line 158, col 56 of module GsrpEgress>
 9 states generated, 9 distinct states found, 6 states left on queue.
 The depth of the complete state graph search is 3.
 The average outdegree of the complete state graph is 6 (minimum is 6, the maximum 6 and the 95th percentile is 6).
-Finished in 00s at (2026-10-09 15:29:50)
+Finished in 00s at (2026-10-09 15:34:25)

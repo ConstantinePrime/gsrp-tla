@@ -1,5 +1,5 @@
 TLC2 Version 2.19 of 08 August 2024 (rev: 5a47802)
-Running breadth-first search Model-Checking with fp 88 and seed 8863921038979228484 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 66473] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
+Running breadth-first search Model-Checking with fp 68 and seed -7676233246837061299 with 1 worker on 16 cores with 7282MB heap and 64MB offheap memory [pid: 69595] (Linux 7.0.0-34-generic amd64, Ubuntu 21.0.12.1 x86_64, MSBDiskFPSet, DiskStateQueue).
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/GsrpEgress.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/eg_epoch_pub.tmp/Integers.tla
 Parsing file /home/constantine/Programming/Constantine/Projects/PhD_verification/gsrp-tla/spec/states/eg_epoch_pub.tmp/FiniteSets.tla
@@ -12,9 +12,9 @@ Semantic processing of module Sequences
 Semantic processing of module FiniteSets
 Semantic processing of module TLC
 Semantic processing of module GsrpEgress
-Starting... (2026-10-09 15:29:45)
+Starting... (2026-10-09 15:34:20)
 Computing initial states...
-Finished computing initial states: 1 distinct state generated at 2026-10-09 15:29:45.
+Finished computing initial states: 1 distinct state generated at 2026-10-09 15:34:20.
 Error: Invariant OneFacade is violated.
 Error: The behavior up to this point is:
 State 1: <Initial predicate>
@@ -100,4 +100,4 @@ State 4: <SendSeg line 99, col 5 to line 111, col 70 of module GsrpEgress>
 96 states generated, 72 distinct states found, 56 states left on queue.
 The depth of the complete state graph search is 4.
 The average outdegree of the complete state graph is 5 (minimum is 1, the maximum 7 and the 95th percentile is 7).
-Finished in 00s at (2026-10-09 15:29:45)
+Finished in 00s at (2026-10-09 15:34:20)
